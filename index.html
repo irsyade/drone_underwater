@@ -1,257 +1,615 @@
 <!DOCTYPE html>
-<html lang="id" class="dark">
+<html lang="id">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CHRONO</title>
-
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/lucide@latest"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
-
-    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap');
+        
         * {
             font-family: 'Space Grotesk', sans-serif;
         }
-
-        body {
-            background: radial-gradient(circle at 20% 20%, rgba(6,182,212,0.05), transparent 40%),
-                        radial-gradient(circle at 80% 80%, rgba(168,85,247,0.05), transparent 40%),
-                        #09090b;
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-5px); }
         }
-
+        
+        @keyframes glow {
+            0%, 100% { box-shadow: 0 0 5px rgba(6, 182, 212, 0.3); }
+            50% { box-shadow: 0 0 20px rgba(6, 182, 212, 0.6); }
+        }
+        
+        @keyframes pulse-ring {
+            0% { transform: scale(0.95); opacity: 0.7; }
+            50% { transform: scale(1); opacity: 1; }
+            100% { transform: scale(0.95); opacity: 0.7; }
+        }
+        
+        .float-animation {
+            animation: float 3s ease-in-out infinite;
+        }
+        
+        .glow-animation {
+            animation: glow 2s ease-in-out infinite;
+        }
+        
+        .pulse-ring {
+            animation: pulse-ring 2s ease-in-out infinite;
+        }
+        
+        .glass-morphism {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .dark .glass-morphism {
+            background: rgba(10, 10, 15, 0.7);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .card-3d {
+            transform-style: preserve-3d;
+            perspective: 1000px;
+        }
+        
+        .card-3d:hover {
+            transform: rotateX(2deg) rotateY(2deg) scale(1.02);
+        }
+        
+        .water-bg {
+            background: linear-gradient(145deg, #0b1a2e 0%, #1a2f3f 100%);
+        }
+        
+        .dark .water-bg {
+            background: linear-gradient(145deg, #030712 0%, #111827 100%);
+        }
+        
         .grid-bg {
-            background-image:
-                linear-gradient(rgba(6, 182, 212, 0.03) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(6, 182, 212, 0.03) 1px, transparent 1px);
-            background-size: 40px 40px;
+            background-image: 
+                linear-gradient(rgba(6, 182, 212, 0.05) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(6, 182, 212, 0.05) 1px, transparent 1px);
+            background-size: 30px 30px;
         }
-
-        .glass {
-            background: rgba(15, 23, 42, 0.75);
-            backdrop-filter: blur(16px);
-            border: 1px solid rgba(6,182,212,0.15);
+        
+        .neon-border {
+            position: relative;
+            border: 1px solid transparent;
         }
-
-        .card-clean {
-            background: rgba(15, 23, 42, 0.8);
-            border: 1px solid rgba(6,182,212,0.15);
-            transition: all .3s ease;
+        
+        .neon-border::before {
+            content: '';
+            position: absolute;
+            inset: -2px;
+            background: linear-gradient(45deg, #06b6d4, #3b82f6, #a855f7);
+            border-radius: inherit;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            z-index: -1;
         }
-
-        .card-clean:hover {
-            transform: translateY(-4px);
-            border-color: rgba(6,182,212,0.35);
+        
+        .neon-border:hover::before {
+            opacity: 0.5;
         }
-
-        .tab-active {
-            background: rgba(6,182,212,0.15);
-            border: 1px solid rgba(6,182,212,0.3);
+        
+        .terminal-text {
+            font-family: 'Space Grotesk', monospace;
+            letter-spacing: 0.5px;
+        }
+        
+        .data-stream {
+            background: linear-gradient(90deg, transparent, rgba(6, 182, 212, 0.2), transparent);
+            background-size: 200% 100%;
+            animation: stream 3s linear infinite;
+        }
+        
+        @keyframes stream {
+            0% { background-position: -200% 0; }
+            100% { background-position: 200% 0; }
+        }
+        
+        .cyber-line {
+            height: 2px;
+            background: linear-gradient(90deg, transparent, #06b6d4, #a855f7, #06b6d4, transparent);
+            background-size: 200% 100%;
+            animation: cyber 4s linear infinite;
+        }
+        
+        @keyframes cyber {
+            0% { background-position: -200% 0; }
+            100% { background-position: 200% 0; }
+        }
+        
+        .glitch {
+            position: relative;
+        }
+        
+        .glitch::before,
+        .glitch::after {
+            content: attr(data-text);
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0.8;
+        }
+        
+        .glitch::before {
+            color: #0ff;
+            z-index: -1;
+            animation: glitch-1 0.3s infinite linear alternate;
+        }
+        
+        .glitch::after {
+            color: #f0f;
+            z-index: -2;
+            animation: glitch-2 0.3s infinite linear alternate;
+        }
+        
+        @keyframes glitch-1 {
+            0% { transform: translate(0); }
+            20% { transform: translate(-2px, 2px); }
+            40% { transform: translate(-2px, -2px); }
+            60% { transform: translate(2px, 2px); }
+            80% { transform: translate(2px, -2px); }
+            100% { transform: translate(0); }
+        }
+        
+        @keyframes glitch-2 {
+            0% { transform: translate(0); }
+            20% { transform: translate(2px, -2px); }
+            40% { transform: translate(2px, 2px); }
+            60% { transform: translate(-2px, -2px); }
+            80% { transform: translate(-2px, 2px); }
+            100% { transform: translate(0); }
+        }
+        
+        .rotate-y {
+            transition: transform 0.5s ease;
+        }
+        
+        .rotate-y:hover {
+            transform: rotateY(10deg);
+        }
+        
+        .border-gradient {
+            border: 2px solid transparent;
+            border-image: linear-gradient(45deg, #06b6d4, #a855f7);
+            border-image-slice: 1;
         }
     </style>
 </head>
 
-<body class="text-slate-100 min-h-screen">
+<body class="water-bg text-slate-100 min-h-screen overflow-x-hidden">
 
-<div class="fixed inset-0 grid-bg opacity-30 pointer-events-none"></div>
-
-<!-- HEADER -->
-<header class="glass sticky top-0 z-50 shadow-[0_0_40px_rgba(6,182,212,0.08)]">
-    <div class="max-w-7xl mx-auto px-8 py-6 flex justify-between items-center">
-
-        <div>
-            <h1 class="text-3xl font-extrabold tracking-tight bg-gradient-to-r from-cyan-400 to-purple-400 bg-clip-text text-transparent">
-                CHRONO
-            </h1>
-            <p class="text-xs text-cyan-400/60 tracking-widest uppercase">
-                Water Observatory System
-            </p>
-        </div>
-
-        <div class="flex items-center gap-10">
-
-            <div class="text-right">
-                <div class="text-xs text-cyan-400/60 font-mono">SYSTEM TIME</div>
-                <div class="text-xl font-mono text-cyan-300" id="clock">00:00:00</div>
-            </div>
-
-            <div class="text-right">
-                <div class="text-xs text-cyan-400/60 font-mono">SYNC</div>
-                <div id="syncStatus" class="text-emerald-400 font-mono text-sm">00:00:00</div>
-            </div>
-
-        </div>
-    </div>
-</header>
-
-<!-- NAVIGATION -->
-<nav class="max-w-7xl mx-auto px-8 mt-10">
-    <div class="flex gap-3">
-        <button onclick="switchTab('monitoring')" id="tab-monitoring"
-            class="px-6 py-3 rounded-xl border border-cyan-500/20 text-sm tracking-widest font-bold transition hover:bg-cyan-500/10">
-            Monitoring
-        </button>
-
-        <button onclick="switchTab('reports')" id="tab-reports"
-            class="px-6 py-3 rounded-xl border border-cyan-500/20 text-sm tracking-widest font-bold transition hover:bg-cyan-500/10">
-            Reports
-        </button>
-    </div>
-</nav>
-
-<main class="max-w-7xl mx-auto px-8 py-16 space-y-16">
-
-<!-- ================= MONITORING ================= -->
-
-<section id="section-monitoring" class="space-y-12">
-
-    <div class="flex justify-between items-center">
-        <h2 class="text-4xl font-extrabold tracking-tight">
-            <span class="bg-gradient-to-r from-cyan-400 to-purple-400 bg-clip-text text-transparent">
-                Real-Time Monitoring
-            </span>
-        </h2>
-
-        <button onclick="refreshSystem()" id="refreshBtn"
-            class="px-6 py-3 rounded-xl bg-gradient-to-r from-cyan-600 to-purple-600 font-bold tracking-widest text-sm transition-transform hover:scale-105 active:scale-95">
-            Refresh System
-        </button>
+    <!-- Animated Background -->
+    <div class="fixed inset-0 grid-bg opacity-30 pointer-events-none"></div>
+    
+    <!-- Floating Particles -->
+    <div class="fixed inset-0 pointer-events-none">
+        <div class="absolute top-20 left-10 w-2 h-2 bg-cyan-400 rounded-full animate-pulse"></div>
+        <div class="absolute top-40 right-20 w-3 h-3 bg-blue-400 rounded-full animate-pulse delay-300"></div>
+        <div class="absolute bottom-20 left-1/4 w-2 h-2 bg-purple-400 rounded-full animate-pulse delay-700"></div>
+        <div class="absolute top-1/3 right-1/3 w-1 h-1 bg-cyan-300 rounded-full animate-pulse delay-500"></div>
+        <div class="absolute bottom-1/4 right-1/4 w-3 h-3 bg-blue-300 rounded-full animate-pulse delay-1000"></div>
     </div>
 
-    <!-- SENSOR CARDS -->
-    <div class="grid md:grid-cols-3 gap-8">
-
-        <!-- PH -->
-        <div class="card-clean p-8 rounded-2xl">
-            <div class="text-sm text-cyan-400/60 font-mono mb-4">SENSOR-01</div>
-            <div class="text-slate-400 text-sm mb-6">PH LEVEL</div>
-            <div class="flex items-end gap-2">
-                <span id="val-ph" class="text-6xl font-extrabold tracking-tight text-cyan-400">0.0</span>
-                <span class="text-slate-500 font-mono">pH</span>
-            </div>
-            <div class="mt-6 h-2 bg-slate-700 rounded-full overflow-hidden">
-                <div id="ph-bar" class="h-full bg-gradient-to-r from-cyan-500 to-purple-500 w-0"></div>
-            </div>
-        </div>
-
-        <!-- TURBIDITY -->
-        <div class="card-clean p-8 rounded-2xl">
-            <div class="text-sm text-blue-400/60 font-mono mb-4">SENSOR-02</div>
-            <div class="text-slate-400 text-sm mb-6">TURBIDITY</div>
-            <div class="flex items-end gap-2">
-                <span id="val-water" class="text-6xl font-extrabold tracking-tight text-blue-400">0</span>
-                <span class="text-slate-500 font-mono">NTU</span>
-            </div>
-            <div class="mt-6 h-2 bg-slate-700 rounded-full overflow-hidden">
-                <div id="turbidity-bar" class="h-full bg-gradient-to-r from-blue-500 to-cyan-500 w-0"></div>
-            </div>
-        </div>
-
-        <!-- BATTERY -->
-        <div class="card-clean p-8 rounded-2xl">
-            <div class="text-sm text-purple-400/60 font-mono mb-4">SENSOR-03</div>
-            <div class="text-slate-400 text-sm mb-6">BATTERY</div>
-            <div class="flex items-end gap-2">
-                <span id="val-battery" class="text-6xl font-extrabold tracking-tight text-purple-400">0</span>
-                <span class="text-slate-500 font-mono">%</span>
-            </div>
-            <div class="mt-6 h-2 bg-slate-700 rounded-full overflow-hidden">
-                <div id="battery-bar" class="h-full bg-gradient-to-r from-purple-500 to-pink-500 w-0"></div>
-            </div>
-        </div>
-
-    </div>
-
-    <!-- CHART -->
-    <div class="p-10 rounded-2xl bg-slate-900/80 border border-cyan-500/20 shadow-2xl">
-        <h3 class="text-lg font-bold mb-6 text-cyan-400">Historical Trend</h3>
-        <div class="h-[400px]">
-            <canvas id="trendChart"></canvas>
-        </div>
-    </div>
-
-</section>
-
-<!-- ================= REPORTS ================= -->
-
-<section id="section-reports" class="hidden space-y-12">
-
-    <h2 class="text-4xl font-extrabold tracking-tight bg-gradient-to-r from-cyan-400 to-purple-400 bg-clip-text text-transparent">
-        Data Reports
-    </h2>
-
-    <div class="grid lg:grid-cols-3 gap-8">
-
-        <!-- SUMMARY -->
-        <div class="card-clean p-8 rounded-2xl space-y-6">
-
-            <select onchange="fetchReports(this.value)"
-                class="bg-slate-800 border border-cyan-500/20 rounded-xl px-4 py-3 text-xs font-mono text-cyan-400 outline-none">
-                <option value="daily">Daily</option>
-                <option value="weekly">Weekly</option>
-                <option value="monthly">Monthly</option>
-            </select>
-
-            <div class="space-y-4">
-                <div class="flex justify-between">
-                    <span class="text-slate-400 text-sm">Avg PH</span>
-                    <span id="rep-avg-ph" class="text-cyan-400 font-bold">0.00</span>
+    <!-- Header - Redesigned -->
+    <header class="glass-morphism sticky top-0 z-50 border-b border-cyan-500/30">
+        <div class="max-w-[1400px] mx-auto px-8 py-5">
+            <div class="flex items-center justify-between">
+                <!-- Logo Area -->
+                <div class="flex items-center gap-3 group">
+                    <div class="relative">
+                        <div class="w-12 h-12 bg-gradient-to-br from-cyan-500 to-purple-600 rounded-xl rotate-45 group-hover:rotate-90 transition-all duration-700"></div>
+                        <div class="absolute inset-0 flex items-center justify-center">
+                            <span class="text-xl font-black text-white rotate-[-45deg] group-hover:rotate-[-90deg] transition-all duration-700">CH</span>
+                        </div>
+                    </div>
+                    <div>
+                        <h1 class="text-3xl font-black tracking-tight">
+                            <span class="bg-gradient-to-r from-cyan-400 to-purple-400 bg-clip-text text-transparent">RONO</span>
+                        </h1>
+                        <p class="text-[8px] text-cyan-300/70 tracking-[0.3em] uppercase">Water Observatory</p>
+                    </div>
                 </div>
 
-                <div class="flex justify-between">
-                    <span class="text-slate-400 text-sm">Max Turbidity</span>
-                    <span id="rep-max-turb" class="text-blue-400 font-bold">0 NTU</span>
-                </div>
+                <!-- Status Bar -->
+                <div class="flex items-center gap-10">
+                    <!-- Theme Toggle -->
+                    <button id="themeToggle" class="relative group">
+                        <div class="absolute inset-0 bg-cyan-500/20 rounded-full blur-xl group-hover:blur-2xl transition-all"></div>
+                        <div class="relative w-12 h-12 rounded-full bg-slate-800/50 flex items-center justify-center border border-cyan-500/50">
+                            <i data-lucide="moon" class="w-5 h-5 dark:hidden text-cyan-400"></i>
+                            <i data-lucide="sun" class="w-5 h-5 hidden dark:block text-yellow-400"></i>
+                        </div>
+                    </button>
 
-                <div class="flex justify-between">
-                    <span class="text-slate-400 text-sm">Total Logs</span>
-                    <span id="rep-total-logs" class="text-purple-400 font-bold">0</span>
+                    <!-- Clock -->
+                    <div class="flex flex-col items-end">
+                        <span class="text-[8px] font-mono text-cyan-400/60 tracking-widest">/// SYSTEM TIME</span>
+                        <div class="flex items-center gap-1">
+                            <span class="text-2xl font-mono font-bold text-cyan-300" id="clock">00:00:00</span>
+                            <span class="text-xs text-cyan-500/50">UTC+7</span>
+                        </div>
+                    </div>
+
+                    <!-- Sync Status -->
+                    <div class="flex flex-col items-end pl-6 border-l border-cyan-500/30">
+                        <span class="text-[8px] font-mono text-cyan-400/60 tracking-widest">/// SYNC</span>
+                        <div class="flex items-center gap-2">
+                            <div class="relative">
+                                <div class="w-3 h-3 bg-emerald-500 rounded-full pulse-ring"></div>
+                                <div class="absolute inset-0 bg-emerald-500 rounded-full animate-ping opacity-75"></div>
+                            </div>
+                            <span id="syncStatus" class="text-sm font-mono font-medium text-emerald-400 tracking-wider">00:00:00</span>
+                        </div>
+                    </div>
                 </div>
             </div>
+        </div>
+        
+        <!-- Animated Line -->
+        <div class="cyber-line"></div>
+    </header>
 
-            <button onclick="exportToPDF()" id="pdfBtn"
-                class="w-full py-3 rounded-xl bg-gradient-to-r from-cyan-600 to-purple-600 font-bold tracking-widest text-sm transition-transform hover:scale-105 active:scale-95">
-                Export Report
+    <!-- Navigation Tabs - Redesigned -->
+    <nav class="max-w-[1400px] mx-auto px-8 mt-8">
+        <div class="flex gap-2 p-1.5 glass-morphism rounded-2xl w-fit">
+            <button onclick="switchTab('monitoring')" id="tab-monitoring"
+                class="relative px-8 py-4 text-sm font-bold tracking-widest uppercase transition-all rounded-xl group">
+                <span class="relative z-10 text-slate-300 group-hover:text-white transition-colors">Monitoring</span>
+                <div class="absolute inset-0 bg-gradient-to-r from-cyan-500/0 via-cyan-500/0 to-purple-500/0 rounded-xl transition-all group-hover:from-cyan-500/20 group-hover:via-cyan-500/20 group-hover:to-purple-500/20"></div>
             </button>
+            <button onclick="switchTab('reports')" id="tab-reports"
+                class="relative px-8 py-4 text-sm font-bold tracking-widest uppercase transition-all rounded-xl group">
+                <span class="relative z-10 text-slate-300 group-hover:text-white transition-colors">Reports</span>
+                <div class="absolute inset-0 bg-gradient-to-r from-cyan-500/0 via-cyan-500/0 to-purple-500/0 rounded-xl transition-all group-hover:from-cyan-500/20 group-hover:via-cyan-500/20 group-hover:to-purple-500/20"></div>
+            </button>
+        </div>
+        <style>
+            .tab-active-monitoring, .tab-active-reports {
+                background: linear-gradient(145deg, rgba(6, 182, 212, 0.2), rgba(168, 85, 247, 0.2)) !important;
+                border: 1px solid rgba(6, 182, 212, 0.3);
+            }
+        </style>
+    </nav>
 
-            <div class="h-[200px] mt-6">
-                <canvas id="reportChart"></canvas>
+    <!-- Main Content -->
+    <main class="max-w-[1400px] mx-auto px-8 py-10">
+
+        <!-- Monitoring Section -->
+        <section id="section-monitoring" class="space-y-10 block">
+            <!-- Header with Refresh -->
+            <div class="flex justify-between items-end">
+                <div class="space-y-2">
+                    <h2 class="text-5xl font-black tracking-tight">
+                        <span class="bg-gradient-to-r from-cyan-400 via-blue-400 to-purple-400 bg-clip-text text-transparent">REAL-TIME</span>
+                        <span class="text-slate-500 ml-3 text-2xl">///</span>
+                    </h2>
+                    <p class="text-slate-500 font-mono text-sm tracking-wider flex items-center gap-2">
+                        <span class="w-1 h-1 bg-cyan-500 rounded-full"></span>
+                        LIVE DATA STREAM
+                        <span class="w-1 h-1 bg-purple-500 rounded-full"></span>
+                    </p>
+                </div>
+                <button onclick="refreshSystem()" id="refreshBtn"
+                    class="group relative px-8 py-4 rounded-2xl overflow-hidden">
+                    <div class="absolute inset-0 bg-gradient-to-r from-cyan-600 to-purple-600 opacity-80 group-hover:opacity-100 transition-opacity"></div>
+                    <div class="absolute inset-0 bg-[url('data:image/svg+xml,...')] opacity-20"></div>
+                    <div class="relative flex items-center gap-3 text-white font-bold tracking-widest text-sm">
+                        <i data-lucide="refresh-cw" class="w-4 h-4 group-hover:rotate-180 transition-transform duration-1000" id="refreshIcon"></i>
+                        <span>REFRESH SYSTEM</span>
+                    </div>
+                    <div class="absolute inset-0 -z-10 bg-gradient-to-r from-cyan-500 to-purple-500 blur-xl opacity-0 group-hover:opacity-50 transition-opacity"></div>
+                </button>
             </div>
 
+            <!-- Stats Grid - 3D Cards -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <!-- PH Card -->
+                <div class="group card-3d">
+                    <div class="relative p-8 rounded-3xl bg-gradient-to-br from-slate-800/50 to-slate-900/50 border border-cyan-500/30 backdrop-blur-xl overflow-hidden rotate-y">
+                        <!-- Background Effects -->
+                        <div class="absolute -top-20 -right-20 w-40 h-40 bg-cyan-500/20 rounded-full blur-3xl group-hover:scale-150 transition-transform"></div>
+                        <div class="absolute -bottom-20 -left-20 w-40 h-40 bg-purple-500/20 rounded-full blur-3xl group-hover:scale-150 transition-transform"></div>
+                        
+                        <!-- Content -->
+                        <div class="relative z-10">
+                            <div class="flex justify-between items-start mb-6">
+                                <div class="flex items-center gap-3">
+                                    <div class="w-10 h-10 rounded-xl bg-cyan-500/20 flex items-center justify-center">
+                                        <i data-lucide="flask-conical" class="w-5 h-5 text-cyan-400"></i>
+                                    </div>
+                                    <div>
+                                        <h3 class="text-xs font-mono text-cyan-400/60 tracking-widest">/// SENSOR-01</h3>
+                                        <span class="text-sm font-bold text-slate-400">PH LEVEL</span>
+                                    </div>
+                                </div>
+                                <span class="px-4 py-2 bg-emerald-500/20 text-emerald-400 text-xs font-mono rounded-full border border-emerald-500/30">OPTIMAL</span>
+                            </div>
+                            
+                            <div class="space-y-6">
+                                <div class="flex items-baseline gap-2">
+                                    <span class="text-7xl font-black bg-gradient-to-r from-cyan-400 to-cyan-300 bg-clip-text text-transparent" id="val-ph">0.0</span>
+                                    <span class="text-slate-500 font-mono text-lg">pH</span>
+                                </div>
+                                
+                                <!-- Animated Bar -->
+                                <div class="relative h-2 bg-slate-700/50 rounded-full overflow-hidden">
+                                    <div class="absolute inset-0 bg-gradient-to-r from-cyan-500 to-purple-500 rounded-full" style="width: 0%;" id="ph-bar"></div>
+                                    <div class="absolute inset-0 data-stream"></div>
+                                </div>
+                                
+                                <div class="flex justify-between text-xs font-mono text-slate-500">
+                                    <span>ACIDIC 0</span>
+                                    <span class="text-cyan-400">NEUTRAL 7</span>
+                                    <span>ALKALINE 14</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Corner Accents -->
+                        <div class="absolute top-0 left-0 w-8 h-8 border-t-2 border-l-2 border-cyan-500/30 rounded-tl-3xl"></div>
+                        <div class="absolute bottom-0 right-0 w-8 h-8 border-b-2 border-r-2 border-purple-500/30 rounded-br-3xl"></div>
+                    </div>
+                </div>
+
+                <!-- Water Turbidity Card -->
+                <div class="group card-3d">
+                    <div class="relative p-8 rounded-3xl bg-gradient-to-br from-slate-800/50 to-slate-900/50 border border-blue-500/30 backdrop-blur-xl overflow-hidden rotate-y">
+                        <div class="absolute -top-20 -right-20 w-40 h-40 bg-blue-500/20 rounded-full blur-3xl group-hover:scale-150 transition-transform"></div>
+                        <div class="absolute -bottom-20 -left-20 w-40 h-40 bg-cyan-500/20 rounded-full blur-3xl group-hover:scale-150 transition-transform"></div>
+                        
+                        <div class="relative z-10">
+                            <div class="flex justify-between items-start mb-6">
+                                <div class="flex items-center gap-3">
+                                    <div class="w-10 h-10 rounded-xl bg-blue-500/20 flex items-center justify-center">
+                                        <i data-lucide="droplets" class="w-5 h-5 text-blue-400"></i>
+                                    </div>
+                                    <div>
+                                        <h3 class="text-xs font-mono text-blue-400/60 tracking-widest">/// SENSOR-02</h3>
+                                        <span class="text-sm font-bold text-slate-400">TURBIDITY</span>
+                                    </div>
+                                </div>
+                                <span class="px-4 py-2 bg-blue-500/20 text-blue-400 text-xs font-mono rounded-full border border-blue-500/30">GOOD</span>
+                            </div>
+                            
+                            <div class="space-y-6">
+                                <div class="flex items-baseline gap-2">
+                                    <span class="text-7xl font-black bg-gradient-to-r from-blue-400 to-blue-300 bg-clip-text text-transparent" id="val-water">0</span>
+                                    <span class="text-slate-500 font-mono text-lg">NTU</span>
+                                </div>
+                                
+                                <div class="relative h-2 bg-slate-700/50 rounded-full overflow-hidden">
+                                    <div class="absolute inset-0 bg-gradient-to-r from-blue-500 to-cyan-500 rounded-full" style="width: 0%;" id="turbidity-bar"></div>
+                                    <div class="absolute inset-0 data-stream"></div>
+                                </div>
+                                
+                                <div class="flex justify-between text-xs font-mono text-slate-500">
+                                    <span>CLEAR 0</span>
+                                    <span class="text-blue-400">MODERATE</span>
+                                    <span>CLOUDY 100</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="absolute top-0 left-0 w-8 h-8 border-t-2 border-l-2 border-blue-500/30 rounded-tl-3xl"></div>
+                        <div class="absolute bottom-0 right-0 w-8 h-8 border-b-2 border-r-2 border-cyan-500/30 rounded-br-3xl"></div>
+                    </div>
+                </div>
+
+                <!-- Battery Card -->
+                <div class="group card-3d">
+                    <div class="relative p-8 rounded-3xl bg-gradient-to-br from-slate-800/50 to-slate-900/50 border border-purple-500/30 backdrop-blur-xl overflow-hidden rotate-y">
+                        <div class="absolute -top-20 -right-20 w-40 h-40 bg-purple-500/20 rounded-full blur-3xl group-hover:scale-150 transition-transform"></div>
+                        <div class="absolute -bottom-20 -left-20 w-40 h-40 bg-pink-500/20 rounded-full blur-3xl group-hover:scale-150 transition-transform"></div>
+                        
+                        <div class="relative z-10">
+                            <div class="flex justify-between items-start mb-6">
+                                <div class="flex items-center gap-3">
+                                    <div class="w-10 h-10 rounded-xl bg-purple-500/20 flex items-center justify-center">
+                                        <i data-lucide="battery-charging" class="w-5 h-5 text-purple-400"></i>
+                                    </div>
+                                    <div>
+                                        <h3 class="text-xs font-mono text-purple-400/60 tracking-widest">/// SENSOR-03</h3>
+                                        <span class="text-sm font-bold text-slate-400">BATTERY</span>
+                                    </div>
+                                </div>
+                                <span class="px-4 py-2 bg-purple-500/20 text-purple-400 text-xs font-mono rounded-full border border-purple-500/30">CHARGING</span>
+                            </div>
+                            
+                            <div class="space-y-6">
+                                <div class="flex items-baseline gap-2">
+                                    <span class="text-7xl font-black bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent" id="val-battery">0</span>
+                                    <span class="text-slate-500 font-mono text-lg">%</span>
+                                </div>
+                                
+                                <div class="relative h-2 bg-slate-700/50 rounded-full overflow-hidden">
+                                    <div class="absolute inset-0 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full" style="width: 0%;" id="battery-bar"></div>
+                                    <div class="absolute inset-0 data-stream"></div>
+                                </div>
+                                
+                                <div class="flex justify-between text-xs font-mono text-slate-500">
+                                    <span>CRITICAL 0</span>
+                                    <span class="text-purple-400">NORMAL</span>
+                                    <span>FULL 100</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="absolute top-0 left-0 w-8 h-8 border-t-2 border-l-2 border-purple-500/30 rounded-tl-3xl"></div>
+                        <div class="absolute bottom-0 right-0 w-8 h-8 border-b-2 border-r-2 border-pink-500/30 rounded-br-3xl"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Chart Container - Redesigned -->
+            <div class="relative p-8 rounded-3xl glass-morphism border border-cyan-500/30 neon-border">
+                <!-- Header -->
+                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-6 mb-8">
+                    <div class="flex items-center gap-4">
+                        <div class="w-2 h-12 bg-gradient-to-b from-cyan-500 to-purple-500 rounded-full"></div>
+                        <div>
+                            <h3 class="text-2xl font-black tracking-tight">
+                                <span class="bg-gradient-to-r from-cyan-400 to-purple-400 bg-clip-text text-transparent">HISTORICAL TREND</span>
+                            </h3>
+                            <p class="text-xs font-mono text-cyan-400/60 tracking-widest">/// LAST 20 SEQUENCES</p>
+                        </div>
+                    </div>
+                    
+                    <!-- Legend - Redesigned -->
+                    <div class="flex gap-6 p-3 rounded-2xl bg-slate-800/30">
+                        <div class="flex items-center gap-2 group/legend">
+                            <div class="w-4 h-4 bg-cyan-500 rounded-full glow-animation"></div>
+                            <span class="text-xs font-mono text-slate-400 group-hover/legend:text-cyan-400 transition-colors">pH</span>
+                        </div>
+                        <div class="flex items-center gap-2 group/legend">
+                            <div class="w-4 h-4 bg-blue-500 rounded-full glow-animation"></div>
+                            <span class="text-xs font-mono text-slate-400 group-hover/legend:text-blue-400 transition-colors">NTU</span>
+                        </div>
+                        <div class="flex items-center gap-2 group/legend">
+                            <div class="w-4 h-4 bg-purple-500 rounded-full glow-animation"></div>
+                            <span class="text-xs font-mono text-slate-400 group-hover/legend:text-purple-400 transition-colors">BAT</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Chart -->
+                <div class="h-[400px] w-full p-4 rounded-2xl bg-slate-900/30">
+                    <canvas id="trendChart"></canvas>
+                </div>
+                
+                <!-- Decorative Elements -->
+                <div class="absolute -bottom-2 -right-2 w-20 h-20 bg-gradient-to-br from-cyan-500/20 to-purple-500/20 rounded-full blur-2xl"></div>
+                <div class="absolute -top-2 -left-2 w-20 h-20 bg-gradient-to-br from-purple-500/20 to-cyan-500/20 rounded-full blur-2xl"></div>
+            </div>
+        </section>
+
+        <!-- Reports Section - Redesigned -->
+        <section id="section-reports" class="space-y-10 hidden">
+            <div class="space-y-2">
+                <h2 class="text-5xl font-black tracking-tight">
+                    <span class="bg-gradient-to-r from-cyan-400 via-blue-400 to-purple-400 bg-clip-text text-transparent">DATA REPORTS</span>
+                    <span class="text-slate-500 ml-3 text-2xl">///</span>
+                </h2>
+                <p class="text-slate-500 font-mono text-sm tracking-wider flex items-center gap-2">
+                    <span class="w-1 h-1 bg-cyan-500 rounded-full"></span>
+                    HISTORICAL ANALYSIS
+                    <span class="w-1 h-1 bg-purple-500 rounded-full"></span>
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                <!-- Summary Card -->
+                <div class="lg:col-span-1 p-8 rounded-3xl glass-morphism border border-cyan-500/30">
+                    <div class="flex justify-between items-center mb-8">
+                        <h3 class="text-xl font-black tracking-tight">
+                            <span class="bg-gradient-to-r from-cyan-400 to-purple-400 bg-clip-text text-transparent">SUMMARY</span>
+                        </h3>
+                        <select onchange="fetchReports(this.value)"
+                            class="bg-slate-800/50 border border-cyan-500/30 text-cyan-400 text-xs font-mono rounded-xl px-4 py-3 focus:ring-0 cursor-pointer outline-none">
+                            <option value="daily" class="bg-slate-900">DAILY</option>
+                            <option value="weekly" class="bg-slate-900">WEEKLY</option>
+                            <option value="monthly" class="bg-slate-900">MONTHLY</option>
+                        </select>
+                    </div>
+                    
+                    <div class="space-y-4">
+                        <div class="p-5 rounded-xl bg-gradient-to-r from-slate-800/50 to-slate-900/50 border border-cyan-500/20">
+                            <div class="flex justify-between items-center">
+                                <span class="text-xs font-mono text-cyan-400/60">/// AVG PH</span>
+                                <span id="rep-avg-ph" class="text-2xl font-black text-cyan-400">0.00</span>
+                            </div>
+                        </div>
+                        
+                        <div class="p-5 rounded-xl bg-gradient-to-r from-slate-800/50 to-slate-900/50 border border-blue-500/20">
+                            <div class="flex justify-between items-center">
+                                <span class="text-xs font-mono text-blue-400/60">/// MAX TURBIDITY</span>
+                                <span id="rep-max-turb" class="text-2xl font-black text-blue-400">0 NTU</span>
+                            </div>
+                        </div>
+                        
+                        <div class="p-5 rounded-xl bg-gradient-to-r from-slate-800/50 to-slate-900/50 border border-purple-500/20">
+                            <div class="flex justify-between items-center">
+                                <span class="text-xs font-mono text-purple-400/60">/// LOG COUNT</span>
+                                <span id="rep-total-logs" class="text-2xl font-black text-purple-400">0</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <button onclick="exportToPDF()" id="pdfBtn"
+                        class="group relative w-full mt-8 px-6 py-5 rounded-2xl overflow-hidden">
+                        <div class="absolute inset-0 bg-gradient-to-r from-cyan-600 to-purple-600"></div>
+                        <div class="relative flex items-center justify-center gap-3 text-white font-bold tracking-widest text-sm">
+                            <i data-lucide="download" class="w-4 h-4 group-hover:translate-y-1 transition-transform"></i>
+                            <span>EXPORT FULL REPORT</span>
+                        </div>
+                    </button>
+
+                    <!-- Mini Chart -->
+                    <div class="mt-8 pt-8 border-t border-cyan-500/30">
+                        <h4 class="text-xs font-mono text-cyan-400/60 tracking-widest mb-6">/// PERIOD OVERVIEW</h4>
+                        <div class="h-[200px]">
+                            <canvas id="reportChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- History Table -->
+                <div class="lg:col-span-2 rounded-3xl glass-morphism border border-cyan-500/30 overflow-hidden">
+                    <div class="p-6 border-b border-cyan-500/30 bg-gradient-to-r from-cyan-500/10 to-purple-500/10">
+                        <h3 class="text-sm font-mono text-cyan-400 tracking-widest">/// DATA LOGS</h3>
+                    </div>
+                    
+                    <div class="overflow-x-auto">
+                        <table class="w-full">
+                            <thead class="bg-slate-800/50">
+                                <tr>
+                                    <th class="px-6 py-5 text-xs font-mono text-cyan-400/60 text-left">TIMESTAMP</th>
+                                    <th class="px-6 py-5 text-xs font-mono text-cyan-400/60 text-left">PH</th>
+                                    <th class="px-6 py-5 text-xs font-mono text-cyan-400/60 text-left">TURBIDITY</th>
+                                    <th class="px-6 py-5 text-xs font-mono text-cyan-400/60 text-left">BATTERY</th>
+                                </tr>
+                            </thead>
+                            <tbody id="report-table-body" class="divide-y divide-cyan-500/10">
+                                <tr>
+                                    <td colspan="4" class="px-6 py-16 text-center font-mono text-sm text-slate-500">LOADING DATA STREAM...</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer - Redesigned -->
+    <footer class="max-w-[1400px] mx-auto px-8 py-12">
+        <div class="relative">
+            <div class="cyber-line mb-8"></div>
+            <div class="flex justify-between items-center">
+                <p class="text-[10px] font-mono text-cyan-500/30 tracking-[0.3em] uppercase">
+                    /// AUTOMATIC SYNCHRONIZATION ACTIVE
+                </p>
+                <p class="text-[10px] font-mono text-cyan-500/30 tracking-[0.3em] uppercase">
+                    PHON 32 OS v1.0
+                </p>
+            </div>
         </div>
+    </footer>
 
-        <!-- TABLE -->
-        <div class="lg:col-span-2 card-clean rounded-2xl overflow-hidden">
-            <table class="w-full text-sm">
-                <thead class="bg-slate-800/60 text-cyan-400/70">
-                    <tr>
-                        <th class="px-6 py-4 text-left">Timestamp</th>
-                        <th class="px-6 py-4 text-left">PH</th>
-                        <th class="px-6 py-4 text-left">Turbidity</th>
-                        <th class="px-6 py-4 text-left">Battery</th>
-                    </tr>
-                </thead>
-                <tbody id="report-table-body" class="divide-y divide-cyan-500/10">
-                    <tr>
-                        <td colspan="4" class="px-6 py-10 text-center text-slate-500">
-                            Loading Data...
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-
-    </div>
-
-</section>
-
-</main>
-
- <script>
+    <script>
         // [SAME JavaScript CODE - TIDAK DIUBAH]
         // Init Lucide Icons
         lucide.createIcons();
@@ -578,6 +936,6 @@
         // Tab initialization
         document.getElementById('tab-monitoring').classList.add('tab-active-monitoring');
     </script>
-
 </body>
+
 </html>
