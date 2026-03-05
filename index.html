@@ -4,10 +4,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SE - PHON 32 | Underwater Drone Dashboard</title>
+    <title>CHRONO - PHON 32 | Temporal Underwater Dashboard</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/lucide@latest"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <script>
@@ -16,14 +16,36 @@
             theme: {
                 extend: {
                     fontFamily: {
-                        sans: ['Outfit', 'sans-serif'],
+                        sans: ['Space Grotesk', 'sans-serif'],
                     },
                     colors: {
-                        brand: {
-                            dark: '#09090b',
-                            card: '#18181b',
-                            border: '#27272a',
-                            accent: '#3b82f6'
+                        chrono: {
+                            dark: '#0A0A0F',
+                            deeper: '#050507',
+                            card: '#12121A',
+                            border: '#1E1E2A',
+                            accent: '#00E5FF',
+                            accent2: '#FF3B7F',
+                            accent3: '#7A4DFF'
+                        }
+                    },
+                    animation: {
+                        'glow': 'glow 2s ease-in-out infinite alternate',
+                        'scan': 'scan 3s linear infinite',
+                        'pulse-chrono': 'pulse-chrono 2s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                    },
+                    keyframes: {
+                        glow: {
+                            '0%': { boxShadow: '0 0 5px rgba(0, 229, 255, 0.3), 0 0 20px rgba(0, 229, 255, 0.1)' },
+                            '100%': { boxShadow: '0 0 20px rgba(0, 229, 255, 0.5), 0 0 40px rgba(0, 229, 255, 0.2)' }
+                        },
+                        'pulse-chrono': {
+                            '0%, 100%': { opacity: 1 },
+                            '50%': { opacity: 0.5 }
+                        },
+                        scan: {
+                            '0%': { transform: 'translateX(-100%)' },
+                            '100%': { transform: 'translateX(100%)' }
                         }
                     }
                 }
@@ -31,31 +53,70 @@
         }
     </script>
     <style>
-        @keyframes pulse-soft {
-
-            0%,
-            100% {
-                opacity: 1;
-            }
-
-            50% {
-                opacity: 0.7;
-            }
+        * {
+            scroll-behavior: smooth;
         }
 
-        .animate-pulse-soft {
-            animation: pulse-soft 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        .chrono-glow {
+            box-shadow: 0 0 20px rgba(0, 229, 255, 0.15);
         }
 
-        .glass {
-            background: rgba(255, 255, 255, 0.8);
-            backdrop-filter: blur(12px);
-            border: 1px solid rgba(0, 0, 0, 0.1);
+        .chrono-glow:hover {
+            box-shadow: 0 0 30px rgba(0, 229, 255, 0.25);
         }
 
-        .dark .glass {
-            background: rgba(24, 24, 27, 0.8);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+        .chrono-border {
+            position: relative;
+            border: 1px solid rgba(0, 229, 255, 0.2);
+        }
+
+        .chrono-border::before {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            background: linear-gradient(45deg, #00E5FF, #FF3B7F, #7A4DFF, #00E5FF);
+            background-size: 300% 300%;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            z-index: -1;
+            filter: blur(8px);
+        }
+
+        .chrono-border:hover::before {
+            opacity: 0.7;
+            animation: gradientShift 3s ease infinite;
+        }
+
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .scan-line {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .scan-line::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, rgba(0, 229, 255, 0.5), transparent);
+            animation: scan 3s linear infinite;
+        }
+
+        .grid-overlay {
+            background-image: 
+                linear-gradient(rgba(0, 229, 255, 0.05) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 229, 255, 0.05) 1px, transparent 1px);
+            background-size: 30px 30px;
         }
 
         ::-webkit-scrollbar {
@@ -63,54 +124,123 @@
         }
 
         ::-webkit-scrollbar-track {
-            background: #09090b;
+            background: #0A0A0F;
         }
 
         ::-webkit-scrollbar-thumb {
-            background: #27272a;
+            background: #00E5FF;
             border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 229, 255, 0.5);
         }
 
-        .tab-active {
-            color: #3b82f6;
-            border-bottom: 2px solid #3b82f6;
+        .tab-active-chrono {
+            color: #00E5FF;
+            border-bottom: 2px solid #00E5FF;
+            text-shadow: 0 0 10px rgba(0, 229, 255, 0.5);
+        }
+
+        .chrono-card {
+            backdrop-filter: blur(10px);
+            background: linear-gradient(135deg, rgba(18, 18, 26, 0.95), rgba(10, 10, 15, 0.98));
+        }
+
+        .glitch {
+            position: relative;
+        }
+
+        .glitch::before,
+        .glitch::after {
+            content: attr(data-text);
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        .glitch::before {
+            animation: glitch-1 0.8s infinite linear alternate-reverse;
+            color: #00E5FF;
+            z-index: -1;
+        }
+
+        .glitch::after {
+            animation: glitch-2 0.8s infinite linear alternate-reverse;
+            color: #FF3B7F;
+            z-index: -2;
+        }
+
+        @keyframes glitch-1 {
+            0% { transform: translate(0); }
+            20% { transform: translate(-2px, 2px); }
+            40% { transform: translate(-2px, -2px); }
+            60% { transform: translate(2px, 2px); }
+            80% { transform: translate(2px, -2px); }
+            100% { transform: translate(0); }
+        }
+
+        @keyframes glitch-2 {
+            0% { transform: translate(0); }
+            20% { transform: translate(2px, -2px); }
+            40% { transform: translate(2px, 2px); }
+            60% { transform: translate(-2px, -2px); }
+            80% { transform: translate(-2px, 2px); }
+            100% { transform: translate(0); }
+        }
+
+        .time-display {
+            font-family: 'Space Grotesk', monospace;
+            text-shadow: 0 0 10px rgba(0, 229, 255, 0.5);
+            letter-spacing: 2px;
+        }
+
+        .value-glow {
+            text-shadow: 0 0 15px currentColor;
         }
     </style>
 </head>
 
-<body
-    class="bg-zinc-50 dark:bg-brand-dark text-slate-900 dark:text-slate-100 min-h-screen font-sans transition-colors duration-300">
+<body class="bg-chrono-dark text-gray-100 min-h-screen font-sans grid-overlay relative overflow-x-hidden">
+    <!-- Animated Background -->
+    <div class="fixed inset-0 pointer-events-none">
+        <div class="absolute inset-0 bg-gradient-to-br from-chrono-accent/5 via-transparent to-chrono-accent2/5"></div>
+        <div class="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-chrono-accent to-transparent"></div>
+        <div class="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-chrono-accent2 to-transparent"></div>
+    </div>
 
     <!-- Header -->
-    <header class="border-b border-zinc-200 dark:border-brand-border sticky top-0 z-50 glass">
-        <div class="max-w-[1400px] mx-auto px-6 py-4 flex items-center justify-between">
-            <div class="flex flex-col">
-                <h1 class="text-xl font-bold tracking-wider leading-none">SE - PHON 32</h1>
-                <p class="text-[10px] text-zinc-500 font-semibold tracking-widest mt-1 uppercase">Integrated Hydro
-                    Observation Platform</p>
+    <header class="border-b border-chrono-border sticky top-0 z-50 chrono-card backdrop-blur-xl">
+        <div class="max-w-[1400px] mx-auto px-8 py-4 flex items-center justify-between">
+            <div class="flex flex-col relative">
+                <div class="flex items-center gap-3">
+                    <div class="w-1 h-8 bg-chrono-accent animate-pulse-chrono"></div>
+                    <div>
+                        <h1 class="text-2xl font-bold tracking-wider glitch" data-text="CHRONO">CHRONO</h1>
+                        <p class="text-[10px] text-chrono-accent font-mono tracking-[0.3em] mt-1 uppercase">PHON 32 · TEMPORAL INTERFACE</p>
+                    </div>
+                </div>
             </div>
 
             <div class="flex items-center gap-8">
                 <!-- Theme Toggle -->
                 <button id="themeToggle"
-                    class="p-2 rounded-full hover:bg-zinc-200 dark:hover:bg-zinc-800 transition-colors">
-                    <i data-lucide="moon" class="w-5 h-5 dark:hidden"></i>
-                    <i data-lucide="sun" class="w-5 h-5 hidden dark:block text-yellow-400"></i>
+                    class="p-2 rounded-lg border border-chrono-border hover:border-chrono-accent transition-all duration-300 chrono-glow group">
+                    <i data-lucide="moon" class="w-4 h-4 text-chrono-accent group-hover:scale-110 transition-transform dark:hidden"></i>
+                    <i data-lucide="sun" class="w-4 h-4 hidden dark:block text-yellow-400 group-hover:scale-110 transition-transform"></i>
                 </button>
 
                 <!-- Clock -->
-                <div class="hidden md:flex flex-col items-end">
-                    <span class="text-[10px] font-bold text-zinc-500 uppercase">Live System Clock</span>
-                    <span id="clock" class="text-xl font-mono font-medium">00:00:00</span>
+                <div class="hidden md:flex flex-col items-end border-l border-chrono-border pl-6">
+                    <span class="text-[8px] font-mono text-chrono-accent tracking-widest uppercase">System Time</span>
+                    <span id="clock" class="text-xl font-mono font-bold time-display">00:00:00</span>
                 </div>
 
                 <!-- Sync Status -->
-                <div class="flex flex-col items-end border-l border-zinc-200 dark:border-brand-border pl-8">
-                    <span class="text-[10px] font-bold text-zinc-500 uppercase">Sync Status</span>
-                    <div class="flex items-center gap-2">
-                        <div class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse-soft"></div>
-                        <span id="syncStatus"
-                            class="text-sm font-mono font-medium text-emerald-500 uppercase">00:00:00</span>
+                <div class="flex flex-col items-end border-l border-chrono-border pl-6">
+                    <span class="text-[8px] font-mono text-chrono-accent2 tracking-widest uppercase">Sync Cycle</span>
+                    <div class="flex items-center gap-3">
+                        <div class="w-2 h-2 rounded-full bg-chrono-accent animate-pulse-chrono"></div>
+                        <span id="syncStatus" class="text-sm font-mono font-bold text-chrono-accent tracking-wider">00:00:00</span>
                     </div>
                 </div>
             </div>
@@ -118,124 +248,116 @@
     </header>
 
     <!-- Navigation Tabs -->
-    <nav class="max-w-[1400px] mx-auto px-6 mt-6">
-        <div class="flex gap-8 border-b border-zinc-200 dark:border-brand-border">
+    <nav class="max-w-[1400px] mx-auto px-8 mt-8">
+        <div class="flex gap-8 border-b border-chrono-border">
             <button onclick="switchTab('monitoring')" id="tab-monitoring"
-                class="pb-3 text-xs font-bold tracking-widest uppercase transition-all tab-active">Monitoring</button>
+                class="pb-3 text-xs font-mono font-bold tracking-[0.2em] uppercase transition-all tab-active-chrono relative scan-line">[MONITORING]</button>
             <button onclick="switchTab('reports')" id="tab-reports"
-                class="pb-3 text-xs font-bold tracking-widest uppercase transition-all text-zinc-500 hover:text-brand-accent">Reports</button>
+                class="pb-3 text-xs font-mono font-bold tracking-[0.2em] uppercase transition-all text-gray-600 hover:text-chrono-accent relative">[REPORTS]</button>
         </div>
     </nav>
 
     <!-- Main Content -->
-    <main class="max-w-[1400px] mx-auto px-6 py-8">
+    <main class="max-w-[1400px] mx-auto px-8 py-8">
 
         <!-- Monitoring Section -->
         <section id="section-monitoring" class="space-y-8 block">
             <div class="flex justify-between items-end">
                 <div>
-                    <h2 class="text-3xl font-bold text-zinc-900 dark:text-white">Real-time <span
-                            class="text-brand-accent">Telemetry</span></h2>
-                    <p class="text-zinc-500 mt-2">Live data sequence from underwater probe</p>
+                    <h2 class="text-4xl font-bold">
+                        <span class="text-transparent bg-clip-text bg-gradient-to-r from-chrono-accent via-chrono-accent2 to-chrono-accent3">REAL-TIME</span>
+                        <span class="text-gray-400">_TELEMETRY</span>
+                    </h2>
+                    <p class="text-gray-600 mt-2 font-mono text-sm">[LIVE DATA STREAM · v2.0.1]</p>
                 </div>
                 <button onclick="refreshSystem()" id="refreshBtn"
-                    class="px-6 py-2 bg-zinc-800 dark:bg-zinc-100 text-white dark:text-zinc-900 rounded-lg text-xs font-bold uppercase tracking-widest hover:bg-zinc-700 dark:hover:bg-zinc-300 transition-all flex items-center gap-2">
-                    <i data-lucide="refresh-cw" class="w-3 h-3" id="refreshIcon"></i>
-                    Refresh System
+                    class="px-6 py-3 bg-chrono-card border border-chrono-border text-chrono-accent rounded-lg text-xs font-mono font-bold uppercase tracking-widest hover:border-chrono-accent hover:chrono-glow transition-all duration-300 flex items-center gap-2 group">
+                    <i data-lucide="refresh-cw" class="w-3 h-3 group-hover:rotate-180 transition-transform duration-500" id="refreshIcon"></i>
+                    <span class="group-hover:text-chrono-accent">⟳ RESET SEQUENCE</span>
                 </button>
             </div>
 
             <!-- Stats Grid -->
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                 <!-- PH Card -->
-                <div
-                    class="p-6 rounded-2xl bg-white dark:bg-brand-card border border-zinc-200 dark:border-brand-border group hover:border-cyan-500/50 transition-all duration-300 relative overflow-hidden">
+                <div class="p-6 rounded-xl chrono-card border border-chrono-border hover:border-chrono-accent/50 transition-all duration-500 relative group chrono-glow">
+                    <div class="absolute inset-0 bg-gradient-to-r from-chrono-accent/0 via-chrono-accent/5 to-chrono-accent/0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 -translate-x-full group-hover:translate-x-full" style="transition: transform 0.8s ease, opacity 0.3s ease;"></div>
                     <div class="flex justify-between items-start mb-4">
-                        <h3
-                            class="flex items-center gap-2 text-[10px] font-bold text-zinc-400 dark:text-zinc-500 uppercase tracking-widest">
-                            <i data-lucide="flask-conical" class="w-3 h-3"></i> PH Level
+                        <h3 class="flex items-center gap-2 text-[10px] font-mono text-gray-600 uppercase tracking-[0.2em]">
+                            <i data-lucide="flask-conical" class="w-3 h-3 text-chrono-accent"></i> 
+                            <span class="text-chrono-accent">[PH]</span> LEVEL
                         </h3>
-                        <span
-                            class="px-2 py-1 bg-emerald-500/10 text-emerald-500 text-[8px] font-black rounded-full border border-emerald-500/20 uppercase">Optimal</span>
+                        <span class="px-2 py-1 bg-chrono-accent/10 text-chrono-accent text-[8px] font-mono rounded border border-chrono-accent/30 uppercase tracking-wider">OPTIMAL</span>
                     </div>
                     <div class="flex items-baseline gap-1">
-                        <span class="text-4xl font-bold transition-all group-hover:scale-105" id="val-ph">0.0</span>
-                        <span class="text-zinc-500 text-sm">pH</span>
+                        <span class="text-5xl font-bold text-chrono-accent value-glow" id="val-ph">0.0</span>
+                        <span class="text-gray-600 text-sm font-mono">pH</span>
                     </div>
-                    <div class="absolute bottom-0 left-0 h-1 w-full bg-cyan-500 shadow-[0_0_15px_rgba(6,182,212,0.5)]">
-                    </div>
+                    <div class="mt-4 h-0.5 w-full bg-gradient-to-r from-chrono-accent/0 via-chrono-accent to-chrono-accent/0"></div>
                 </div>
 
                 <!-- Water Turbidity Card -->
-                <div
-                    class="p-6 rounded-2xl bg-white dark:bg-brand-card border border-zinc-200 dark:border-brand-border group hover:border-blue-500/50 transition-all duration-300 relative overflow-hidden">
+                <div class="p-6 rounded-xl chrono-card border border-chrono-border hover:border-chrono-accent/50 transition-all duration-500 relative group chrono-glow">
+                    <div class="absolute inset-0 bg-gradient-to-r from-chrono-accent/0 via-chrono-accent/5 to-chrono-accent/0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 -translate-x-full group-hover:translate-x-full" style="transition: transform 0.8s ease, opacity 0.3s ease;"></div>
                     <div class="flex justify-between items-start mb-4">
-                        <h3
-                            class="flex items-center gap-2 text-[10px] font-bold text-zinc-400 dark:text-zinc-500 uppercase tracking-widest">
-                            <i data-lucide="droplets" class="w-3 h-3"></i> Water Turbidity
+                        <h3 class="flex items-center gap-2 text-[10px] font-mono text-gray-600 uppercase tracking-[0.2em]">
+                            <i data-lucide="droplets" class="w-3 h-3 text-chrono-accent2"></i> 
+                            <span class="text-chrono-accent2">[NTU]</span> TURBIDITY
                         </h3>
-                        <span
-                            class="px-2 py-1 bg-blue-500/10 text-blue-500 text-[8px] font-black rounded-full border border-blue-500/20 uppercase">Good</span>
+                        <span class="px-2 py-1 bg-chrono-accent2/10 text-chrono-accent2 text-[8px] font-mono rounded border border-chrono-accent2/30 uppercase tracking-wider">STABLE</span>
                     </div>
                     <div class="flex items-baseline gap-1">
-                        <span class="text-4xl font-bold transition-all group-hover:scale-105" id="val-water">0</span>
-                        <span class="text-zinc-500 text-sm">NTU</span>
+                        <span class="text-5xl font-bold text-chrono-accent2 value-glow" id="val-water">0</span>
+                        <span class="text-gray-600 text-sm font-mono">NTU</span>
                     </div>
-                    <div class="absolute bottom-0 left-0 h-1 w-full bg-blue-500 shadow-[0_0_15px_rgba(59,130,246,0.5)]">
-                    </div>
+                    <div class="mt-4 h-0.5 w-full bg-gradient-to-r from-chrono-accent2/0 via-chrono-accent2 to-chrono-accent2/0"></div>
                 </div>
 
                 <!-- Battery Card -->
-                <div
-                    class="p-6 rounded-2xl bg-white dark:bg-brand-card border border-zinc-200 dark:border-brand-border group hover:border-purple-500/50 transition-all duration-300 relative overflow-hidden">
+                <div class="p-6 rounded-xl chrono-card border border-chrono-border hover:border-chrono-accent/50 transition-all duration-500 relative group chrono-glow">
+                    <div class="absolute inset-0 bg-gradient-to-r from-chrono-accent/0 via-chrono-accent/5 to-chrono-accent/0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 -translate-x-full group-hover:translate-x-full" style="transition: transform 0.8s ease, opacity 0.3s ease;"></div>
                     <div class="flex justify-between items-start mb-4">
-                        <h3
-                            class="flex items-center gap-2 text-[10px] font-bold text-zinc-400 dark:text-zinc-500 uppercase tracking-widest">
-                            <i data-lucide="battery-charging" class="w-3 h-3"></i> Battery Status
+                        <h3 class="flex items-center gap-2 text-[10px] font-mono text-gray-600 uppercase tracking-[0.2em]">
+                            <i data-lucide="battery-charging" class="w-3 h-3 text-chrono-accent3"></i> 
+                            <span class="text-chrono-accent3">[PWR]</span> STATUS
                         </h3>
-                        <span
-                            class="px-2 py-1 bg-purple-500/10 text-purple-500 text-[8px] font-black rounded-full border border-purple-500/20 uppercase">Charging</span>
+                        <span class="px-2 py-1 bg-chrono-accent3/10 text-chrono-accent3 text-[8px] font-mono rounded border border-chrono-accent3/30 uppercase tracking-wider">CHARGING</span>
                     </div>
                     <div class="flex items-baseline gap-1">
-                        <span class="text-4xl font-bold transition-all group-hover:scale-105" id="val-battery">0</span>
-                        <span class="text-zinc-500 text-sm">%</span>
+                        <span class="text-5xl font-bold text-chrono-accent3 value-glow" id="val-battery">0</span>
+                        <span class="text-gray-600 text-sm font-mono">%</span>
                     </div>
-                    <div
-                        class="absolute bottom-0 left-0 h-1 w-full bg-purple-500 shadow-[0_0_15px_rgba(168,85,247,0.5)]">
-                    </div>
+                    <div class="mt-4 h-0.5 w-full bg-gradient-to-r from-chrono-accent3/0 via-chrono-accent3 to-chrono-accent3/0"></div>
                 </div>
 
                 <!-- Temperature Card -->
-                <div
-                    class="p-6 rounded-2xl bg-white dark:bg-brand-card border border-zinc-200 dark:border-brand-border group hover:border-orange-500/50 transition-all duration-300 relative overflow-hidden">
+                <div class="p-6 rounded-xl chrono-card border border-chrono-border hover:border-chrono-accent/50 transition-all duration-500 relative group chrono-glow">
+                    <div class="absolute inset-0 bg-gradient-to-r from-chrono-accent/0 via-chrono-accent/5 to-chrono-accent/0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 -translate-x-full group-hover:translate-x-full" style="transition: transform 0.8s ease, opacity 0.3s ease;"></div>
                     <div class="flex justify-between items-start mb-4">
-                        <h3
-                            class="flex items-center gap-2 text-[10px] font-bold text-zinc-400 dark:text-zinc-500 uppercase tracking-widest">
-                            <i data-lucide="thermometer" class="w-3 h-3"></i> Temperature
+                        <h3 class="flex items-center gap-2 text-[10px] font-mono text-gray-600 uppercase tracking-[0.2em]">
+                            <i data-lucide="thermometer" class="w-3 h-3 text-amber-500"></i> 
+                            <span class="text-amber-500">[TEMP]</span> DEGREE
                         </h3>
-                        <span
-                            class="px-2 py-1 bg-orange-500/10 text-orange-500 text-[8px] font-black rounded-full border border-orange-500/20 uppercase">Stable</span>
+                        <span class="px-2 py-1 bg-amber-500/10 text-amber-500 text-[8px] font-mono rounded border border-amber-500/30 uppercase tracking-wider">NOMINAL</span>
                     </div>
                     <div class="flex items-baseline gap-1">
-                        <span class="text-4xl font-bold transition-all group-hover:scale-105" id="val-temp">0.0</span>
-                        <span class="text-zinc-500 text-sm">°C</span>
+                        <span class="text-5xl font-bold text-amber-500 value-glow" id="val-temp">0.0</span>
+                        <span class="text-gray-600 text-sm font-mono">°C</span>
                     </div>
-                    <div
-                        class="absolute bottom-0 left-0 h-1 w-full bg-orange-500 shadow-[0_0_15px_rgba(249,115,22,0.5)]">
-                    </div>
+                    <div class="mt-4 h-0.5 w-full bg-gradient-to-r from-amber-500/0 via-amber-500 to-amber-500/0"></div>
                 </div>
             </div>
 
             <!-- Charts Grid -->
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
                 <!-- pH Chart Container -->
-                <div
-                    class="p-8 rounded-2xl bg-white dark:bg-brand-card border border-zinc-200 dark:border-brand-border">
-                    <div class="flex justify-between items-center mb-8">
+                <div class="p-6 rounded-xl chrono-card border border-chrono-border">
+                    <div class="flex justify-between items-center mb-6">
                         <div class="flex items-center gap-3">
-                            <div class="w-1.5 h-6 bg-cyan-500 rounded-full"></div>
-                            <h3 class="text-xs font-bold uppercase tracking-widest text-zinc-900 dark:text-zinc-100">pH
-                                Level Trend</h3>
+                            <div class="w-1 h-8 bg-chrono-accent animate-pulse-chrono"></div>
+                            <h3 class="text-xs font-mono font-bold uppercase tracking-[0.2em] text-gray-400">
+                                <span class="text-chrono-accent">[PH]</span> TREND ANALYSIS
+                            </h3>
                         </div>
                     </div>
                     <div class="h-[300px] w-full">
@@ -244,13 +366,13 @@
                 </div>
 
                 <!-- Turbidity Chart Container -->
-                <div
-                    class="p-8 rounded-2xl bg-white dark:bg-brand-card border border-zinc-200 dark:border-brand-border">
-                    <div class="flex justify-between items-center mb-8">
+                <div class="p-6 rounded-xl chrono-card border border-chrono-border">
+                    <div class="flex justify-between items-center mb-6">
                         <div class="flex items-center gap-3">
-                            <div class="w-1.5 h-6 bg-blue-500 rounded-full"></div>
-                            <h3 class="text-xs font-bold uppercase tracking-widest text-zinc-900 dark:text-zinc-100">
-                                Turbidity Trend (NTU)</h3>
+                            <div class="w-1 h-8 bg-chrono-accent2 animate-pulse-chrono"></div>
+                            <h3 class="text-xs font-mono font-bold uppercase tracking-[0.2em] text-gray-400">
+                                <span class="text-chrono-accent2">[NTU]</span> TURBIDITY GRAPH
+                            </h3>
                         </div>
                     </div>
                     <div class="h-[300px] w-full">
@@ -259,20 +381,20 @@
                 </div>
 
                 <!-- Temperature Chart Container -->
-                <div
-                    class="p-8 rounded-2xl bg-white dark:bg-brand-card border border-zinc-200 dark:border-brand-border lg:col-span-2">
-                    <div class="flex justify-between items-center mb-8">
+                <div class="p-6 rounded-xl chrono-card border border-chrono-border lg:col-span-2">
+                    <div class="flex justify-between items-center mb-6">
                         <div class="flex items-center gap-3">
-                            <div class="w-1.5 h-6 bg-orange-500 rounded-full"></div>
-                            <h3 class="text-xs font-bold uppercase tracking-widest text-zinc-900 dark:text-zinc-100">
-                                Temperature Gauge</h3>
+                            <div class="w-1 h-8 bg-amber-500 animate-pulse-chrono"></div>
+                            <h3 class="text-xs font-mono font-bold uppercase tracking-[0.2em] text-gray-400">
+                                <span class="text-amber-500">[TEMP]</span> THERMAL GAUGE
+                            </h3>
                         </div>
                     </div>
                     <div class="h-[300px] w-full relative flex items-center justify-center">
                         <canvas id="tempChart"></canvas>
                         <div class="absolute pt-10 text-center">
-                            <span class="block text-5xl font-bold text-zinc-900 dark:text-white" id="gauge-temp-val">0.0</span>
-                            <span class="text-xs font-bold uppercase tracking-widest text-zinc-500">Celcius</span>
+                            <span class="block text-6xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-amber-400 to-amber-600" id="gauge-temp-val">0.0</span>
+                            <span class="text-xs font-mono font-bold uppercase tracking-[0.3em] text-gray-600">CELCIUS</span>
                         </div>
                     </div>
                 </div>
@@ -282,51 +404,53 @@
         <!-- Reports Section -->
         <section id="section-reports" class="space-y-8 hidden">
             <div>
-                <h2 class="text-3xl font-bold text-zinc-900 dark:text-white">Data <span
-                        class="text-brand-accent">Reports</span></h2>
-                <p class="text-zinc-500 mt-2">Historical summary and sensor analytics</p>
+                <h2 class="text-4xl font-bold">
+                    <span class="text-transparent bg-clip-text bg-gradient-to-r from-chrono-accent via-chrono-accent2 to-chrono-accent3">HISTORICAL</span>
+                    <span class="text-gray-400">_DATA</span>
+                </h2>
+                <p class="text-gray-600 mt-2 font-mono text-sm">[TEMPORAL ANALYSIS · SEQUENCE LOGS]</p>
             </div>
 
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
                 <!-- Summary Card -->
-                <div class="lg:col-span-1 p-6 rounded-2xl glass space-y-6">
+                <div class="lg:col-span-1 p-6 rounded-xl chrono-card border border-chrono-border space-y-6 relative chrono-glow">
+                    <div class="absolute top-0 right-0 w-20 h-20 border-t border-r border-chrono-accent/30"></div>
                     <div class="flex justify-between items-center">
-                        <h3 class="text-xs font-bold uppercase tracking-widest">Report Summary</h3>
+                        <h3 class="text-xs font-mono font-bold uppercase tracking-[0.2em] text-chrono-accent">[SUMMARY]</h3>
                         <select onchange="fetchReports(this.value)"
-                            class="bg-transparent border-none text-[10px] font-bold uppercase text-brand-accent focus:ring-0 cursor-pointer">
-                            <option value="daily">Daily</option>
-                            <option value="weekly">Weekly</option>
-                            <option value="monthly">Monthly</option>
+                            class="bg-chrono-card border border-chrono-border text-[10px] font-mono font-bold text-chrono-accent rounded px-2 py-1 focus:outline-none focus:border-chrono-accent cursor-pointer uppercase tracking-wider">
+                            <option value="daily" class="bg-chrono-dark">DAILY</option>
+                            <option value="weekly" class="bg-chrono-dark">WEEKLY</option>
+                            <option value="monthly" class="bg-chrono-dark">MONTHLY</option>
                         </select>
                     </div>
-                    <div class="space-y-4">
-                        <div class="flex justify-between items-center p-3 rounded-xl bg-zinc-100 dark:bg-zinc-800/50">
-                            <span class="text-xs text-zinc-500 font-bold uppercase">Avg PH</span>
-                            <span id="rep-avg-ph" class="font-bold">0.00</span>
+                    <div class="space-y-3">
+                        <div class="flex justify-between items-center p-3 rounded-lg border border-chrono-border bg-chrono-dark/50">
+                            <span class="text-xs font-mono text-gray-600 uppercase tracking-wider">AVG PH</span>
+                            <span id="rep-avg-ph" class="font-mono font-bold text-chrono-accent">0.00</span>
                         </div>
-                        <div class="flex justify-between items-center p-3 rounded-xl bg-zinc-100 dark:bg-zinc-800/50">
-                            <span class="text-xs text-zinc-500 font-bold uppercase">Max Turbidity</span>
-                            <span id="rep-max-turb" class="font-bold">0 NTU</span>
+                        <div class="flex justify-between items-center p-3 rounded-lg border border-chrono-border bg-chrono-dark/50">
+                            <span class="text-xs font-mono text-gray-600 uppercase tracking-wider">MAX NTU</span>
+                            <span id="rep-max-turb" class="font-mono font-bold text-chrono-accent2">0 NTU</span>
                         </div>
-                        <div class="flex justify-between items-center p-3 rounded-xl bg-zinc-100 dark:bg-zinc-800/50">
-                            <span class="text-xs text-zinc-500 font-bold uppercase">Avg Temp</span>
-                            <span id="rep-avg-temp" class="font-bold">0.00°C</span>
+                        <div class="flex justify-between items-center p-3 rounded-lg border border-chrono-border bg-chrono-dark/50">
+                            <span class="text-xs font-mono text-gray-600 uppercase tracking-wider">AVG TEMP</span>
+                            <span id="rep-avg-temp" class="font-mono font-bold text-amber-500">0.00°C</span>
                         </div>
-                        <div class="flex justify-between items-center p-3 rounded-xl bg-zinc-100 dark:bg-zinc-800/50">
-                            <span class="text-xs text-zinc-500 font-bold uppercase">Log Count</span>
-                            <span id="rep-total-logs" class="font-bold">0</span>
+                        <div class="flex justify-between items-center p-3 rounded-lg border border-chrono-border bg-chrono-dark/50">
+                            <span class="text-xs font-mono text-gray-600 uppercase tracking-wider">LOG COUNT</span>
+                            <span id="rep-total-logs" class="font-mono font-bold text-chrono-accent3">0</span>
                         </div>
                     </div>
                     <button onclick="exportToPDF()" id="pdfBtn"
-                        class="w-full py-4 bg-brand-accent text-white rounded-xl font-bold uppercase tracking-widest text-xs hover:bg-blue-600 transition-all flex items-center justify-center gap-2">
-                        <i data-lucide="download" class="w-4 h-4"></i>
-                        <span>Export Full Report (PDF)</span>
+                        class="w-full py-4 bg-gradient-to-r from-chrono-accent/20 to-chrono-accent2/20 border border-chrono-border text-chrono-accent rounded-lg font-mono font-bold uppercase tracking-widest text-xs hover:border-chrono-accent hover:chrono-glow transition-all duration-300 flex items-center justify-center gap-2 group">
+                        <i data-lucide="download" class="w-4 h-4 group-hover:translate-y-1 transition-transform"></i>
+                        <span>EXPORT [PDF]</span>
                     </button>
 
                     <!-- Mini Chart for Reports -->
-                    <div class="pt-4 border-t border-zinc-200 dark:border-zinc-800">
-                        <h4 class="text-[10px] font-bold text-zinc-500 uppercase tracking-widest mb-4">Period Overview
-                        </h4>
+                    <div class="pt-4 border-t border-chrono-border">
+                        <h4 class="text-[8px] font-mono font-bold text-gray-600 uppercase tracking-[0.3em] mb-4">PERIOD OVERVIEW</h4>
                         <div class="h-[150px]">
                             <canvas id="reportChart"></canvas>
                         </div>
@@ -334,22 +458,21 @@
                 </div>
 
                 <!-- History Table -->
-                <div
-                    class="lg:col-span-2 rounded-2xl bg-white dark:bg-brand-card border border-zinc-200 dark:border-brand-border overflow-hidden">
+                <div class="lg:col-span-2 rounded-xl chrono-card border border-chrono-border overflow-hidden relative">
+                    <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-chrono-accent via-chrono-accent2 to-chrono-accent3"></div>
                     <table class="w-full text-left">
-                        <thead class="bg-zinc-50 dark:bg-zinc-800/50 border-b border-zinc-200 dark:border-brand-border">
+                        <thead class="bg-chrono-dark/50 border-b border-chrono-border">
                             <tr>
-                                <th class="px-6 py-4 text-[10px] font-black uppercase text-zinc-500">Timestamp</th>
-                                <th class="px-6 py-4 text-[10px] font-black uppercase text-zinc-500">pH</th>
-                                <th class="px-6 py-4 text-[10px] font-black uppercase text-zinc-500">Turbidity (NTU)
-                                </th>
-                                <th class="px-6 py-4 text-[10px] font-black uppercase text-zinc-500">Suhu (°C)</th>
-                                <th class="px-6 py-4 text-[10px] font-black uppercase text-zinc-500">Battery</th>
+                                <th class="px-6 py-4 text-[8px] font-mono font-bold uppercase text-gray-600 tracking-[0.2em]">TIMESTAMP</th>
+                                <th class="px-6 py-4 text-[8px] font-mono font-bold uppercase text-gray-600 tracking-[0.2em]">[PH]</th>
+                                <th class="px-6 py-4 text-[8px] font-mono font-bold uppercase text-gray-600 tracking-[0.2em]">[NTU]</th>
+                                <th class="px-6 py-4 text-[8px] font-mono font-bold uppercase text-gray-600 tracking-[0.2em]">[°C]</th>
+                                <th class="px-6 py-4 text-[8px] font-mono font-bold uppercase text-gray-600 tracking-[0.2em]">[PWR]</th>
                             </tr>
                         </thead>
-                        <tbody id="report-table-body" class="divide-y divide-zinc-100 dark:divide-zinc-800">
+                        <tbody id="report-table-body" class="divide-y divide-chrono-border">
                             <tr id="report-table-placeholder">
-                                <td colspan="5" class="px-6 py-10 text-center text-xs text-zinc-400">Memuat data...</td>
+                                <td colspan="5" class="px-6 py-10 text-center text-xs font-mono text-gray-600">LOADING DATA SEQUENCE...</td>
                             </tr>
                         </tbody>
                     </table>
@@ -358,9 +481,14 @@
         </section>
     </main>
 
-    <footer class="max-w-[1400px] mx-auto px-6 py-12 text-center">
-        <p class="text-[10px] text-zinc-500 font-bold uppercase tracking-[0.2em]">Automatic Synchronization Active -
-            PHON 32 OS 1.0</p>
+    <footer class="max-w-[1400px] mx-auto px-8 py-12">
+        <div class="border-t border-chrono-border pt-8">
+            <div class="flex justify-center items-center gap-4">
+                <div class="w-2 h-2 rounded-full bg-chrono-accent animate-pulse-chrono"></div>
+                <p class="text-[8px] font-mono text-gray-700 font-bold uppercase tracking-[0.4em]">CHRONO OS · REALITY SYNCHRONIZATION ACTIVE · v1.0.0</p>
+                <div class="w-2 h-2 rounded-full bg-chrono-accent2 animate-pulse-chrono"></div>
+            </div>
+        </div>
     </footer>
 
     <script>
@@ -405,15 +533,13 @@
             if (tab === 'monitoring') {
                 monSection.classList.remove('hidden');
                 repSection.classList.add('hidden');
-                monTab.classList.add('tab-active');
-                repTab.classList.remove('tab-active');
-                repTab.classList.add('text-zinc-500');
+                monTab.classList.add('tab-active-chrono');
+                repTab.classList.remove('tab-active-chrono');
             } else {
                 monSection.classList.add('hidden');
                 repSection.classList.remove('hidden');
-                repTab.classList.add('tab-active');
-                monTab.classList.remove('tab-active');
-                monTab.classList.add('text-zinc-500');
+                repTab.classList.add('tab-active-chrono');
+                monTab.classList.remove('tab-active-chrono');
             }
         }
 
@@ -422,8 +548,8 @@
 
         function initCharts() {
             const isDark = document.documentElement.classList.contains('dark');
-            const gridColor = isDark ? 'rgba(255, 255, 255, 0.05)' : 'rgba(0, 0, 0, 0.05)';
-            const textColor = isDark ? '#71717a' : '#71717a';
+            const gridColor = isDark ? 'rgba(0, 229, 255, 0.1)' : 'rgba(0, 0, 0, 0.05)';
+            const textColor = isDark ? '#00E5FF' : '#71717a';
 
             // Common options
             const chartOptions = {
@@ -435,20 +561,22 @@
                 },
                 scales: {
                     x: {
-                        grid: { display: false },
-                        ticks: { color: textColor, font: { size: 10 } }
+                        grid: { display: false, color: 'rgba(0, 229, 255, 0.1)' },
+                        ticks: { color: '#6B7280', font: { size: 10, family: 'Space Grotesk' } }
                     }
                 },
                 plugins: {
                     legend: { display: false },
                     tooltip: {
-                        backgroundColor: isDark ? '#18181b' : '#fff',
-                        titleColor: isDark ? '#fff' : '#000',
-                        bodyColor: isDark ? '#ccc' : '#444',
+                        backgroundColor: '#12121A',
+                        titleColor: '#00E5FF',
+                        bodyColor: '#fff',
                         borderWidth: 1,
-                        borderColor: 'rgba(255,255,255,0.1)',
+                        borderColor: '#00E5FF',
                         padding: 12,
-                        boxPadding: 6
+                        boxPadding: 6,
+                        titleFont: { family: 'Space Grotesk', size: 11 },
+                        bodyFont: { family: 'Space Grotesk', size: 10 }
                     }
                 }
             };
@@ -461,8 +589,8 @@
                     datasets: [{
                         label: 'pH',
                         data: Array(20).fill(null),
-                        borderColor: '#06b6d4',
-                        backgroundColor: 'rgba(6,182,212,0.1)',
+                        borderColor: '#00E5FF',
+                        backgroundColor: 'rgba(0, 229, 255, 0.1)',
                         borderWidth: 2,
                         tension: 0.4,
                         fill: true,
@@ -477,7 +605,7 @@
                             min: 0,
                             max: 14,
                             grid: { color: gridColor },
-                            ticks: { color: textColor, font: { size: 10 }, stepSize: 2 }
+                            ticks: { color: '#6B7280', font: { size: 10, family: 'Space Grotesk' }, stepSize: 2 }
                         }
                     }
                 }
@@ -491,8 +619,8 @@
                     datasets: [{
                         label: 'Turbidity (NTU)',
                         data: Array(20).fill(null),
-                        borderColor: '#3b82f6',
-                        backgroundColor: 'rgba(59,130,246,0.1)',
+                        borderColor: '#FF3B7F',
+                        backgroundColor: 'rgba(255, 59, 127, 0.1)',
                         borderWidth: 2,
                         tension: 0.4,
                         fill: true,
@@ -507,7 +635,7 @@
                             min: 0,
                             suggestedMax: 3000,
                             grid: { color: gridColor },
-                            ticks: { color: textColor, font: { size: 10 } }
+                            ticks: { color: '#6B7280', font: { size: 10, family: 'Space Grotesk' } }
                         }
                     }
                 }
@@ -522,7 +650,7 @@
                         data: [0, 50],
                         backgroundColor: [
                             '#f97316',
-                            isDark ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.05)'
+                            'rgba(0, 229, 255, 0.05)'
                         ],
                         borderWidth: 0,
                         circumference: 180,
@@ -562,11 +690,6 @@
                     if (data.id !== lastDataId) {
                         lastDataId = data.id;
 
-                        // Mapping kolom database → UI:
-                        // kualitas_air → pH Level
-                        // tahan        → Water Turbidity (NTU)
-                        // daya_listrik → Battery (%)
-
                         document.getElementById('val-ph').textContent = parseFloat(data.kualitas_air).toFixed(1);
                         document.getElementById('val-water').textContent = Math.floor(data.tahan);
                         document.getElementById('val-battery').textContent = Math.floor(data.daya_listrik);
@@ -593,13 +716,13 @@
 
                         // Reset stopwatch saat data baru berhasil diterima
                         startTime = Date.now();
-                        document.getElementById('syncStatus').className = "text-sm font-mono font-medium text-emerald-500 uppercase";
+                        document.getElementById('syncStatus').className = "text-sm font-mono font-bold text-chrono-accent tracking-wider";
                     }
                 }
             } catch (error) {
                 console.error('Error fetching data:', error);
                 document.getElementById('syncStatus').textContent = "OFFLINE";
-                document.getElementById('syncStatus').className = "text-sm font-mono font-medium text-amber-500 uppercase";
+                document.getElementById('syncStatus').className = "text-sm font-mono font-bold text-amber-500 uppercase tracking-wider";
             }
         }
 
@@ -614,11 +737,11 @@
             reportChart = new Chart(ctxReport, {
                 type: 'bar',
                 data: {
-                    labels: ['Avg pH', 'Max NTU (Scaled)'],
+                    labels: ['AVG PH', 'MAX NTU'],
                     datasets: [{
                         data: [avgPh, maxTurb / 10], // Scaled for visibility
-                        backgroundColor: ['#06b6d4', '#3b82f6'],
-                        borderRadius: 8,
+                        backgroundColor: ['#00E5FF', '#FF3B7F'],
+                        borderRadius: 4,
                         barThickness: 20
                     }]
                 },
@@ -629,12 +752,25 @@
                         y: {
                             beginAtZero: true,
                             max: 14,
-                            grid: { color: isDark ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.05)' },
+                            grid: { color: isDark ? 'rgba(0, 229, 255, 0.1)' : 'rgba(0,0,0,0.05)' },
                             ticks: { display: false }
                         },
-                        x: { grid: { display: false }, ticks: { font: { size: 9 }, color: '#71717a' } }
+                        x: { 
+                            grid: { display: false }, 
+                            ticks: { 
+                                font: { size: 9, family: 'Space Grotesk' }, 
+                                color: '#6B7280' 
+                            } 
+                        }
                     },
-                    plugins: { legend: { display: false } }
+                    plugins: { 
+                        legend: { display: false },
+                        tooltip: {
+                            backgroundColor: '#12121A',
+                            titleColor: '#00E5FF',
+                            borderColor: '#00E5FF'
+                        }
+                    }
                 }
             });
         }
@@ -661,7 +797,7 @@
                     const history = result.history || [];
 
                     if (history.length === 0) {
-                        tbody.innerHTML = `<tr><td colspan="5" class="px-6 py-10 text-center text-xs text-zinc-400">Tidak ada data untuk periode ini.</td></tr>`;
+                        tbody.innerHTML = `<tr><td colspan="5" class="px-6 py-10 text-center text-xs font-mono text-gray-600">NO DATA AVAILABLE</td></tr>`;
                     } else {
                         tbody.innerHTML = history.map(row => {
                             const ts = row.timestamp || '-';
@@ -671,15 +807,15 @@
                             const temp_val = parseFloat(row.suhu).toFixed(1);
 
                             // Warna badge baterai
-                            const batColor = bat_val >= 60 ? 'text-emerald-500' : bat_val >= 30 ? 'text-amber-500' : 'text-red-500';
+                            const batColor = bat_val >= 60 ? 'text-chrono-accent' : bat_val >= 30 ? 'text-chrono-accent2' : 'text-amber-500';
 
                             return `
-                                <tr class="hover:bg-zinc-50 dark:hover:bg-zinc-800/30 transition-colors">
-                                    <td class="px-6 py-4 text-xs font-mono text-zinc-400">${ts}</td>
-                                    <td class="px-6 py-4 text-xs font-bold">${ph_val}</td>
-                                    <td class="px-6 py-4 text-xs font-bold">${ntu_val} NTU</td>
-                                    <td class="px-6 py-4 text-xs font-bold text-orange-500">${temp_val}°C</td>
-                                    <td class="px-6 py-4 text-xs font-bold ${batColor}">${bat_val}%</td>
+                                <tr class="hover:bg-chrono-accent/5 transition-colors duration-200">
+                                    <td class="px-6 py-4 text-xs font-mono text-gray-500">${ts}</td>
+                                    <td class="px-6 py-4 text-xs font-mono font-bold text-chrono-accent">${ph_val}</td>
+                                    <td class="px-6 py-4 text-xs font-mono font-bold text-chrono-accent2">${ntu_val} NTU</td>
+                                    <td class="px-6 py-4 text-xs font-mono font-bold text-amber-500">${temp_val}°C</td>
+                                    <td class="px-6 py-4 text-xs font-mono font-bold ${batColor}">${bat_val}%</td>
                                 </tr>
                             `;
                         }).join('');
@@ -687,12 +823,12 @@
                 } else {
                     // Jika server mengembalikan bukan success
                     document.getElementById('report-table-body').innerHTML =
-                        `<tr><td colspan="5" class="px-6 py-10 text-center text-xs text-red-400">Gagal memuat data: ${result.message || 'Unknown error'}</td></tr>`;
+                        `<tr><td colspan="5" class="px-6 py-10 text-center text-xs font-mono text-red-400">ERROR: ${result.message || 'Unknown error'}</td></tr>`;
                 }
             } catch (error) {
                 console.error('Error fetching reports:', error);
                 document.getElementById('report-table-body').innerHTML =
-                    `<tr><td colspan="5" class="px-6 py-10 text-center text-xs text-red-400">Koneksi ke server gagal.</td></tr>`;
+                    `<tr><td colspan="5" class="px-6 py-10 text-center text-xs font-mono text-red-400">CONNECTION FAILED</td></tr>`;
             }
         }
 
@@ -726,15 +862,15 @@
 
             // UI Feedback
             btn.disabled = true;
-            btn.innerHTML = '<i data-lucide="loader-2" class="w-4 h-4 animate-spin"></i> Generating...';
+            btn.innerHTML = '<i data-lucide="loader-2" class="w-4 h-4 animate-spin"></i> GENERATING...';
             lucide.createIcons();
 
             const element = document.getElementById('section-reports');
             const opt = {
                 margin: 10,
-                filename: 'SE-PHON32-Report.pdf',
+                filename: 'CHRONO-PHON32-Report.pdf',
                 image: { type: 'jpeg', quality: 0.98 },
-                html2canvas: { scale: 2, useCORS: true, backgroundColor: document.documentElement.classList.contains('dark') ? '#09090b' : '#ffffff' },
+                html2canvas: { scale: 2, useCORS: true, backgroundColor: '#0A0A0F' },
                 jsPDF: { unit: 'mm', format: 'a4', orientation: 'landscape' }
             };
 
