@@ -1,0 +1,4 @@
+$servername = "localhost";
+$username   = "underwat_dronefadel";
+$password   = "rcmpPAgYC2ShGeHjwGXP";
+$dbname     = "underwat_dronefadel";
