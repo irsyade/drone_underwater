@@ -12,7 +12,6 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <script>
         tailwind.config = {
-            darkMode: 'class',
             theme: {
                 extend: {
                     fontFamily: {
@@ -20,13 +19,12 @@
                     },
                     colors: {
                         chrono: {
-                            dark: '#0A0A0F',
-                            deeper: '#050507',
-                            card: '#12121A',
-                            border: '#1E1E2A',
-                            accent: '#00E5FF',
-                            accent2: '#FF3B7F',
-                            accent3: '#7A4DFF'
+                            light: '#F8FAFC',
+                            card: '#FFFFFF',
+                            border: '#E2E8F0',
+                            accent: '#0284C7',
+                            accent2: '#E11D48',
+                            accent3: '#7C3AED'
                         }
                     },
                     animation: {
@@ -36,8 +34,8 @@
                     },
                     keyframes: {
                         glow: {
-                            '0%': { boxShadow: '0 0 5px rgba(0, 229, 255, 0.3), 0 0 20px rgba(0, 229, 255, 0.1)' },
-                            '100%': { boxShadow: '0 0 20px rgba(0, 229, 255, 0.5), 0 0 40px rgba(0, 229, 255, 0.2)' }
+                            '0%': { boxShadow: '0 0 5px rgba(2, 132, 199, 0.2), 0 0 20px rgba(2, 132, 199, 0.1)' },
+                            '100%': { boxShadow: '0 0 20px rgba(2, 132, 199, 0.3), 0 0 40px rgba(2, 132, 199, 0.15)' }
                         },
                         'pulse-chrono': {
                             '0%, 100%': { opacity: 1 },
@@ -58,16 +56,16 @@
         }
 
         .chrono-glow {
-            box-shadow: 0 0 20px rgba(0, 229, 255, 0.15);
+            box-shadow: 0 0 20px rgba(2, 132, 199, 0.1);
         }
 
         .chrono-glow:hover {
-            box-shadow: 0 0 30px rgba(0, 229, 255, 0.25);
+            box-shadow: 0 0 30px rgba(2, 132, 199, 0.15);
         }
 
         .chrono-border {
             position: relative;
-            border: 1px solid rgba(0, 229, 255, 0.2);
+            border: 1px solid rgba(2, 132, 199, 0.2);
         }
 
         .chrono-border::before {
@@ -77,7 +75,7 @@
             left: -2px;
             right: -2px;
             bottom: -2px;
-            background: linear-gradient(45deg, #00E5FF, #FF3B7F, #7A4DFF, #00E5FF);
+            background: linear-gradient(45deg, #0284C7, #E11D48, #7C3AED, #0284C7);
             background-size: 300% 300%;
             opacity: 0;
             transition: opacity 0.3s ease;
@@ -86,7 +84,7 @@
         }
 
         .chrono-border:hover::before {
-            opacity: 0.7;
+            opacity: 0.5;
             animation: gradientShift 3s ease infinite;
         }
 
@@ -108,14 +106,14 @@
             left: 0;
             width: 100%;
             height: 2px;
-            background: linear-gradient(90deg, transparent, rgba(0, 229, 255, 0.5), transparent);
+            background: linear-gradient(90deg, transparent, rgba(2, 132, 199, 0.3), transparent);
             animation: scan 3s linear infinite;
         }
 
         .grid-overlay {
             background-image: 
-                linear-gradient(rgba(0, 229, 255, 0.05) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(0, 229, 255, 0.05) 1px, transparent 1px);
+                linear-gradient(rgba(2, 132, 199, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(2, 132, 199, 0.03) 1px, transparent 1px);
             background-size: 30px 30px;
         }
 
@@ -124,28 +122,27 @@
         }
 
         ::-webkit-scrollbar-track {
-            background: #0A0A0F;
+            background: #F1F5F9;
         }
 
         ::-webkit-scrollbar-thumb {
-            background: #00E5FF;
+            background: #0284C7;
             border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0, 229, 255, 0.5);
         }
 
         .tab-active-chrono {
-            color: #00E5FF;
-            border-bottom: 2px solid #00E5FF;
-            text-shadow: 0 0 10px rgba(0, 229, 255, 0.5);
+            color: #0284C7;
+            border-bottom: 2px solid #0284C7;
         }
 
         .chrono-card {
-            backdrop-filter: blur(10px);
-            background: linear-gradient(135deg, rgba(18, 18, 26, 0.95), rgba(10, 10, 15, 0.98));
+            background: #FFFFFF;
+            border: 1px solid #E2E8F0;
         }
 
         .glitch {
             position: relative;
+            color: #0F172A;
         }
 
         .glitch::before,
@@ -160,13 +157,13 @@
 
         .glitch::before {
             animation: glitch-1 0.8s infinite linear alternate-reverse;
-            color: #00E5FF;
+            color: #0284C7;
             z-index: -1;
         }
 
         .glitch::after {
             animation: glitch-2 0.8s infinite linear alternate-reverse;
-            color: #FF3B7F;
+            color: #E11D48;
             z-index: -2;
         }
 
@@ -190,17 +187,17 @@
 
         .time-display {
             font-family: 'Space Grotesk', monospace;
-            text-shadow: 0 0 10px rgba(0, 229, 255, 0.5);
             letter-spacing: 2px;
+            color: #0F172A;
         }
 
         .value-glow {
-            text-shadow: 0 0 15px currentColor;
+            text-shadow: 0 0 10px rgba(2, 132, 199, 0.3);
         }
     </style>
 </head>
 
-<body class="bg-chrono-dark text-gray-100 min-h-screen font-sans grid-overlay relative overflow-x-hidden">
+<body class="bg-chrono-light text-slate-900 min-h-screen font-sans grid-overlay relative overflow-x-hidden">
     <!-- Animated Background -->
     <div class="fixed inset-0 pointer-events-none">
         <div class="absolute inset-0 bg-gradient-to-br from-chrono-accent/5 via-transparent to-chrono-accent2/5"></div>
@@ -209,26 +206,19 @@
     </div>
 
     <!-- Header -->
-    <header class="border-b border-chrono-border sticky top-0 z-50 chrono-card backdrop-blur-xl">
+    <header class="border-b border-chrono-border sticky top-0 z-50 bg-white/80 backdrop-blur-xl">
         <div class="max-w-[1400px] mx-auto px-8 py-4 flex items-center justify-between">
             <div class="flex flex-col relative">
                 <div class="flex items-center gap-3">
                     <div class="w-1 h-8 bg-chrono-accent animate-pulse-chrono"></div>
                     <div>
-                        <h1 class="text-2xl font-bold tracking-wider glitch" data-text="CHRONO">CHRONO</h1>
+                        <h1 class="text-2xl font-bold tracking-wider glitch text-slate-900" data-text="CHRONO">CHRONO</h1>
                         <p class="text-[10px] text-chrono-accent font-mono tracking-[0.3em] mt-1 uppercase">PHON 32 · TEMPORAL INTERFACE</p>
                     </div>
                 </div>
             </div>
 
             <div class="flex items-center gap-8">
-                <!-- Theme Toggle -->
-                <button id="themeToggle"
-                    class="p-2 rounded-lg border border-chrono-border hover:border-chrono-accent transition-all duration-300 chrono-glow group">
-                    <i data-lucide="moon" class="w-4 h-4 text-chrono-accent group-hover:scale-110 transition-transform dark:hidden"></i>
-                    <i data-lucide="sun" class="w-4 h-4 hidden dark:block text-yellow-400 group-hover:scale-110 transition-transform"></i>
-                </button>
-
                 <!-- Clock -->
                 <div class="hidden md:flex flex-col items-end border-l border-chrono-border pl-6">
                     <span class="text-[8px] font-mono text-chrono-accent tracking-widest uppercase">System Time</span>
@@ -253,7 +243,7 @@
             <button onclick="switchTab('monitoring')" id="tab-monitoring"
                 class="pb-3 text-xs font-mono font-bold tracking-[0.2em] uppercase transition-all tab-active-chrono relative scan-line">[MONITORING]</button>
             <button onclick="switchTab('reports')" id="tab-reports"
-                class="pb-3 text-xs font-mono font-bold tracking-[0.2em] uppercase transition-all text-gray-600 hover:text-chrono-accent relative">[REPORTS]</button>
+                class="pb-3 text-xs font-mono font-bold tracking-[0.2em] uppercase transition-all text-slate-400 hover:text-chrono-accent relative">[REPORTS]</button>
         </div>
     </nav>
 
@@ -266,12 +256,12 @@
                 <div>
                     <h2 class="text-4xl font-bold">
                         <span class="text-transparent bg-clip-text bg-gradient-to-r from-chrono-accent via-chrono-accent2 to-chrono-accent3">REAL-TIME</span>
-                        <span class="text-gray-400">_TELEMETRY</span>
+                        <span class="text-slate-400">_TELEMETRY</span>
                     </h2>
-                    <p class="text-gray-600 mt-2 font-mono text-sm">[LIVE DATA STREAM · v2.0.1]</p>
+                    <p class="text-slate-500 mt-2 font-mono text-sm">[LIVE DATA STREAM · v2.0.1]</p>
                 </div>
                 <button onclick="refreshSystem()" id="refreshBtn"
-                    class="px-6 py-3 bg-chrono-card border border-chrono-border text-chrono-accent rounded-lg text-xs font-mono font-bold uppercase tracking-widest hover:border-chrono-accent hover:chrono-glow transition-all duration-300 flex items-center gap-2 group">
+                    class="px-6 py-3 bg-white border border-chrono-border text-chrono-accent rounded-lg text-xs font-mono font-bold uppercase tracking-widest hover:border-chrono-accent hover:chrono-glow transition-all duration-300 flex items-center gap-2 group">
                     <i data-lucide="refresh-cw" class="w-3 h-3 group-hover:rotate-180 transition-transform duration-500" id="refreshIcon"></i>
                     <span class="group-hover:text-chrono-accent">⟳ RESET SEQUENCE</span>
                 </button>
@@ -280,10 +270,10 @@
             <!-- Stats Grid -->
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                 <!-- PH Card -->
-                <div class="p-6 rounded-xl chrono-card border border-chrono-border hover:border-chrono-accent/50 transition-all duration-500 relative group chrono-glow">
+                <div class="p-6 rounded-xl bg-white border border-chrono-border hover:border-chrono-accent/50 transition-all duration-500 relative group chrono-glow">
                     <div class="absolute inset-0 bg-gradient-to-r from-chrono-accent/0 via-chrono-accent/5 to-chrono-accent/0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 -translate-x-full group-hover:translate-x-full" style="transition: transform 0.8s ease, opacity 0.3s ease;"></div>
                     <div class="flex justify-between items-start mb-4">
-                        <h3 class="flex items-center gap-2 text-[10px] font-mono text-gray-600 uppercase tracking-[0.2em]">
+                        <h3 class="flex items-center gap-2 text-[10px] font-mono text-slate-500 uppercase tracking-[0.2em]">
                             <i data-lucide="flask-conical" class="w-3 h-3 text-chrono-accent"></i> 
                             <span class="text-chrono-accent">[PH]</span> LEVEL
                         </h3>
@@ -291,16 +281,16 @@
                     </div>
                     <div class="flex items-baseline gap-1">
                         <span class="text-5xl font-bold text-chrono-accent value-glow" id="val-ph">0.0</span>
-                        <span class="text-gray-600 text-sm font-mono">pH</span>
+                        <span class="text-slate-400 text-sm font-mono">pH</span>
                     </div>
                     <div class="mt-4 h-0.5 w-full bg-gradient-to-r from-chrono-accent/0 via-chrono-accent to-chrono-accent/0"></div>
                 </div>
 
                 <!-- Water Turbidity Card -->
-                <div class="p-6 rounded-xl chrono-card border border-chrono-border hover:border-chrono-accent/50 transition-all duration-500 relative group chrono-glow">
+                <div class="p-6 rounded-xl bg-white border border-chrono-border hover:border-chrono-accent/50 transition-all duration-500 relative group chrono-glow">
                     <div class="absolute inset-0 bg-gradient-to-r from-chrono-accent/0 via-chrono-accent/5 to-chrono-accent/0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 -translate-x-full group-hover:translate-x-full" style="transition: transform 0.8s ease, opacity 0.3s ease;"></div>
                     <div class="flex justify-between items-start mb-4">
-                        <h3 class="flex items-center gap-2 text-[10px] font-mono text-gray-600 uppercase tracking-[0.2em]">
+                        <h3 class="flex items-center gap-2 text-[10px] font-mono text-slate-500 uppercase tracking-[0.2em]">
                             <i data-lucide="droplets" class="w-3 h-3 text-chrono-accent2"></i> 
                             <span class="text-chrono-accent2">[NTU]</span> TURBIDITY
                         </h3>
@@ -308,16 +298,16 @@
                     </div>
                     <div class="flex items-baseline gap-1">
                         <span class="text-5xl font-bold text-chrono-accent2 value-glow" id="val-water">0</span>
-                        <span class="text-gray-600 text-sm font-mono">NTU</span>
+                        <span class="text-slate-400 text-sm font-mono">NTU</span>
                     </div>
                     <div class="mt-4 h-0.5 w-full bg-gradient-to-r from-chrono-accent2/0 via-chrono-accent2 to-chrono-accent2/0"></div>
                 </div>
 
                 <!-- Battery Card -->
-                <div class="p-6 rounded-xl chrono-card border border-chrono-border hover:border-chrono-accent/50 transition-all duration-500 relative group chrono-glow">
+                <div class="p-6 rounded-xl bg-white border border-chrono-border hover:border-chrono-accent/50 transition-all duration-500 relative group chrono-glow">
                     <div class="absolute inset-0 bg-gradient-to-r from-chrono-accent/0 via-chrono-accent/5 to-chrono-accent/0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 -translate-x-full group-hover:translate-x-full" style="transition: transform 0.8s ease, opacity 0.3s ease;"></div>
                     <div class="flex justify-between items-start mb-4">
-                        <h3 class="flex items-center gap-2 text-[10px] font-mono text-gray-600 uppercase tracking-[0.2em]">
+                        <h3 class="flex items-center gap-2 text-[10px] font-mono text-slate-500 uppercase tracking-[0.2em]">
                             <i data-lucide="battery-charging" class="w-3 h-3 text-chrono-accent3"></i> 
                             <span class="text-chrono-accent3">[PWR]</span> STATUS
                         </h3>
@@ -325,37 +315,37 @@
                     </div>
                     <div class="flex items-baseline gap-1">
                         <span class="text-5xl font-bold text-chrono-accent3 value-glow" id="val-battery">0</span>
-                        <span class="text-gray-600 text-sm font-mono">%</span>
+                        <span class="text-slate-400 text-sm font-mono">%</span>
                     </div>
                     <div class="mt-4 h-0.5 w-full bg-gradient-to-r from-chrono-accent3/0 via-chrono-accent3 to-chrono-accent3/0"></div>
                 </div>
 
                 <!-- Temperature Card -->
-                <div class="p-6 rounded-xl chrono-card border border-chrono-border hover:border-chrono-accent/50 transition-all duration-500 relative group chrono-glow">
+                <div class="p-6 rounded-xl bg-white border border-chrono-border hover:border-chrono-accent/50 transition-all duration-500 relative group chrono-glow">
                     <div class="absolute inset-0 bg-gradient-to-r from-chrono-accent/0 via-chrono-accent/5 to-chrono-accent/0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 -translate-x-full group-hover:translate-x-full" style="transition: transform 0.8s ease, opacity 0.3s ease;"></div>
                     <div class="flex justify-between items-start mb-4">
-                        <h3 class="flex items-center gap-2 text-[10px] font-mono text-gray-600 uppercase tracking-[0.2em]">
-                            <i data-lucide="thermometer" class="w-3 h-3 text-amber-500"></i> 
-                            <span class="text-amber-500">[TEMP]</span> DEGREE
+                        <h3 class="flex items-center gap-2 text-[10px] font-mono text-slate-500 uppercase tracking-[0.2em]">
+                            <i data-lucide="thermometer" class="w-3 h-3 text-orange-500"></i> 
+                            <span class="text-orange-500">[TEMP]</span> DEGREE
                         </h3>
-                        <span class="px-2 py-1 bg-amber-500/10 text-amber-500 text-[8px] font-mono rounded border border-amber-500/30 uppercase tracking-wider">NOMINAL</span>
+                        <span class="px-2 py-1 bg-orange-500/10 text-orange-500 text-[8px] font-mono rounded border border-orange-500/30 uppercase tracking-wider">NOMINAL</span>
                     </div>
                     <div class="flex items-baseline gap-1">
-                        <span class="text-5xl font-bold text-amber-500 value-glow" id="val-temp">0.0</span>
-                        <span class="text-gray-600 text-sm font-mono">°C</span>
+                        <span class="text-5xl font-bold text-orange-500 value-glow" id="val-temp">0.0</span>
+                        <span class="text-slate-400 text-sm font-mono">°C</span>
                     </div>
-                    <div class="mt-4 h-0.5 w-full bg-gradient-to-r from-amber-500/0 via-amber-500 to-amber-500/0"></div>
+                    <div class="mt-4 h-0.5 w-full bg-gradient-to-r from-orange-500/0 via-orange-500 to-orange-500/0"></div>
                 </div>
             </div>
 
             <!-- Charts Grid -->
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
                 <!-- pH Chart Container -->
-                <div class="p-6 rounded-xl chrono-card border border-chrono-border">
+                <div class="p-6 rounded-xl bg-white border border-chrono-border">
                     <div class="flex justify-between items-center mb-6">
                         <div class="flex items-center gap-3">
                             <div class="w-1 h-8 bg-chrono-accent animate-pulse-chrono"></div>
-                            <h3 class="text-xs font-mono font-bold uppercase tracking-[0.2em] text-gray-400">
+                            <h3 class="text-xs font-mono font-bold uppercase tracking-[0.2em] text-slate-500">
                                 <span class="text-chrono-accent">[PH]</span> TREND ANALYSIS
                             </h3>
                         </div>
@@ -366,11 +356,11 @@
                 </div>
 
                 <!-- Turbidity Chart Container -->
-                <div class="p-6 rounded-xl chrono-card border border-chrono-border">
+                <div class="p-6 rounded-xl bg-white border border-chrono-border">
                     <div class="flex justify-between items-center mb-6">
                         <div class="flex items-center gap-3">
                             <div class="w-1 h-8 bg-chrono-accent2 animate-pulse-chrono"></div>
-                            <h3 class="text-xs font-mono font-bold uppercase tracking-[0.2em] text-gray-400">
+                            <h3 class="text-xs font-mono font-bold uppercase tracking-[0.2em] text-slate-500">
                                 <span class="text-chrono-accent2">[NTU]</span> TURBIDITY GRAPH
                             </h3>
                         </div>
@@ -381,20 +371,20 @@
                 </div>
 
                 <!-- Temperature Chart Container -->
-                <div class="p-6 rounded-xl chrono-card border border-chrono-border lg:col-span-2">
+                <div class="p-6 rounded-xl bg-white border border-chrono-border lg:col-span-2">
                     <div class="flex justify-between items-center mb-6">
                         <div class="flex items-center gap-3">
-                            <div class="w-1 h-8 bg-amber-500 animate-pulse-chrono"></div>
-                            <h3 class="text-xs font-mono font-bold uppercase tracking-[0.2em] text-gray-400">
-                                <span class="text-amber-500">[TEMP]</span> THERMAL GAUGE
+                            <div class="w-1 h-8 bg-orange-500 animate-pulse-chrono"></div>
+                            <h3 class="text-xs font-mono font-bold uppercase tracking-[0.2em] text-slate-500">
+                                <span class="text-orange-500">[TEMP]</span> THERMAL GAUGE
                             </h3>
                         </div>
                     </div>
                     <div class="h-[300px] w-full relative flex items-center justify-center">
                         <canvas id="tempChart"></canvas>
                         <div class="absolute pt-10 text-center">
-                            <span class="block text-6xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-amber-400 to-amber-600" id="gauge-temp-val">0.0</span>
-                            <span class="text-xs font-mono font-bold uppercase tracking-[0.3em] text-gray-600">CELCIUS</span>
+                            <span class="block text-6xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-orange-500 to-orange-600" id="gauge-temp-val">0.0</span>
+                            <span class="text-xs font-mono font-bold uppercase tracking-[0.3em] text-slate-400">CELCIUS</span>
                         </div>
                     </div>
                 </div>
@@ -406,51 +396,51 @@
             <div>
                 <h2 class="text-4xl font-bold">
                     <span class="text-transparent bg-clip-text bg-gradient-to-r from-chrono-accent via-chrono-accent2 to-chrono-accent3">HISTORICAL</span>
-                    <span class="text-gray-400">_DATA</span>
+                    <span class="text-slate-400">_DATA</span>
                 </h2>
-                <p class="text-gray-600 mt-2 font-mono text-sm">[TEMPORAL ANALYSIS · SEQUENCE LOGS]</p>
+                <p class="text-slate-500 mt-2 font-mono text-sm">[TEMPORAL ANALYSIS · SEQUENCE LOGS]</p>
             </div>
 
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
                 <!-- Summary Card -->
-                <div class="lg:col-span-1 p-6 rounded-xl chrono-card border border-chrono-border space-y-6 relative chrono-glow">
+                <div class="lg:col-span-1 p-6 rounded-xl bg-white border border-chrono-border space-y-6 relative chrono-glow">
                     <div class="absolute top-0 right-0 w-20 h-20 border-t border-r border-chrono-accent/30"></div>
                     <div class="flex justify-between items-center">
                         <h3 class="text-xs font-mono font-bold uppercase tracking-[0.2em] text-chrono-accent">[SUMMARY]</h3>
                         <select onchange="fetchReports(this.value)"
-                            class="bg-chrono-card border border-chrono-border text-[10px] font-mono font-bold text-chrono-accent rounded px-2 py-1 focus:outline-none focus:border-chrono-accent cursor-pointer uppercase tracking-wider">
-                            <option value="daily" class="bg-chrono-dark">DAILY</option>
-                            <option value="weekly" class="bg-chrono-dark">WEEKLY</option>
-                            <option value="monthly" class="bg-chrono-dark">MONTHLY</option>
+                            class="bg-white border border-chrono-border text-[10px] font-mono font-bold text-chrono-accent rounded px-2 py-1 focus:outline-none focus:border-chrono-accent cursor-pointer uppercase tracking-wider">
+                            <option value="daily" class="bg-white">DAILY</option>
+                            <option value="weekly" class="bg-white">WEEKLY</option>
+                            <option value="monthly" class="bg-white">MONTHLY</option>
                         </select>
                     </div>
                     <div class="space-y-3">
-                        <div class="flex justify-between items-center p-3 rounded-lg border border-chrono-border bg-chrono-dark/50">
-                            <span class="text-xs font-mono text-gray-600 uppercase tracking-wider">AVG PH</span>
+                        <div class="flex justify-between items-center p-3 rounded-lg border border-chrono-border bg-slate-50">
+                            <span class="text-xs font-mono text-slate-500 uppercase tracking-wider">AVG PH</span>
                             <span id="rep-avg-ph" class="font-mono font-bold text-chrono-accent">0.00</span>
                         </div>
-                        <div class="flex justify-between items-center p-3 rounded-lg border border-chrono-border bg-chrono-dark/50">
-                            <span class="text-xs font-mono text-gray-600 uppercase tracking-wider">MAX NTU</span>
+                        <div class="flex justify-between items-center p-3 rounded-lg border border-chrono-border bg-slate-50">
+                            <span class="text-xs font-mono text-slate-500 uppercase tracking-wider">MAX NTU</span>
                             <span id="rep-max-turb" class="font-mono font-bold text-chrono-accent2">0 NTU</span>
                         </div>
-                        <div class="flex justify-between items-center p-3 rounded-lg border border-chrono-border bg-chrono-dark/50">
-                            <span class="text-xs font-mono text-gray-600 uppercase tracking-wider">AVG TEMP</span>
-                            <span id="rep-avg-temp" class="font-mono font-bold text-amber-500">0.00°C</span>
+                        <div class="flex justify-between items-center p-3 rounded-lg border border-chrono-border bg-slate-50">
+                            <span class="text-xs font-mono text-slate-500 uppercase tracking-wider">AVG TEMP</span>
+                            <span id="rep-avg-temp" class="font-mono font-bold text-orange-500">0.00°C</span>
                         </div>
-                        <div class="flex justify-between items-center p-3 rounded-lg border border-chrono-border bg-chrono-dark/50">
-                            <span class="text-xs font-mono text-gray-600 uppercase tracking-wider">LOG COUNT</span>
+                        <div class="flex justify-between items-center p-3 rounded-lg border border-chrono-border bg-slate-50">
+                            <span class="text-xs font-mono text-slate-500 uppercase tracking-wider">LOG COUNT</span>
                             <span id="rep-total-logs" class="font-mono font-bold text-chrono-accent3">0</span>
                         </div>
                     </div>
                     <button onclick="exportToPDF()" id="pdfBtn"
-                        class="w-full py-4 bg-gradient-to-r from-chrono-accent/20 to-chrono-accent2/20 border border-chrono-border text-chrono-accent rounded-lg font-mono font-bold uppercase tracking-widest text-xs hover:border-chrono-accent hover:chrono-glow transition-all duration-300 flex items-center justify-center gap-2 group">
+                        class="w-full py-4 bg-gradient-to-r from-chrono-accent/10 to-chrono-accent2/10 border border-chrono-border text-chrono-accent rounded-lg font-mono font-bold uppercase tracking-widest text-xs hover:border-chrono-accent hover:chrono-glow transition-all duration-300 flex items-center justify-center gap-2 group">
                         <i data-lucide="download" class="w-4 h-4 group-hover:translate-y-1 transition-transform"></i>
                         <span>EXPORT [PDF]</span>
                     </button>
 
                     <!-- Mini Chart for Reports -->
                     <div class="pt-4 border-t border-chrono-border">
-                        <h4 class="text-[8px] font-mono font-bold text-gray-600 uppercase tracking-[0.3em] mb-4">PERIOD OVERVIEW</h4>
+                        <h4 class="text-[8px] font-mono font-bold text-slate-400 uppercase tracking-[0.3em] mb-4">PERIOD OVERVIEW</h4>
                         <div class="h-[150px]">
                             <canvas id="reportChart"></canvas>
                         </div>
@@ -458,21 +448,21 @@
                 </div>
 
                 <!-- History Table -->
-                <div class="lg:col-span-2 rounded-xl chrono-card border border-chrono-border overflow-hidden relative">
+                <div class="lg:col-span-2 rounded-xl bg-white border border-chrono-border overflow-hidden relative">
                     <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-chrono-accent via-chrono-accent2 to-chrono-accent3"></div>
                     <table class="w-full text-left">
-                        <thead class="bg-chrono-dark/50 border-b border-chrono-border">
+                        <thead class="bg-slate-50 border-b border-chrono-border">
                             <tr>
-                                <th class="px-6 py-4 text-[8px] font-mono font-bold uppercase text-gray-600 tracking-[0.2em]">TIMESTAMP</th>
-                                <th class="px-6 py-4 text-[8px] font-mono font-bold uppercase text-gray-600 tracking-[0.2em]">[PH]</th>
-                                <th class="px-6 py-4 text-[8px] font-mono font-bold uppercase text-gray-600 tracking-[0.2em]">[NTU]</th>
-                                <th class="px-6 py-4 text-[8px] font-mono font-bold uppercase text-gray-600 tracking-[0.2em]">[°C]</th>
-                                <th class="px-6 py-4 text-[8px] font-mono font-bold uppercase text-gray-600 tracking-[0.2em]">[PWR]</th>
+                                <th class="px-6 py-4 text-[8px] font-mono font-bold uppercase text-slate-500 tracking-[0.2em]">TIMESTAMP</th>
+                                <th class="px-6 py-4 text-[8px] font-mono font-bold uppercase text-slate-500 tracking-[0.2em]">[PH]</th>
+                                <th class="px-6 py-4 text-[8px] font-mono font-bold uppercase text-slate-500 tracking-[0.2em]">[NTU]</th>
+                                <th class="px-6 py-4 text-[8px] font-mono font-bold uppercase text-slate-500 tracking-[0.2em]">[°C]</th>
+                                <th class="px-6 py-4 text-[8px] font-mono font-bold uppercase text-slate-500 tracking-[0.2em]">[PWR]</th>
                             </tr>
                         </thead>
                         <tbody id="report-table-body" class="divide-y divide-chrono-border">
                             <tr id="report-table-placeholder">
-                                <td colspan="5" class="px-6 py-10 text-center text-xs font-mono text-gray-600">LOADING DATA SEQUENCE...</td>
+                                <td colspan="5" class="px-6 py-10 text-center text-xs font-mono text-slate-400">LOADING DATA SEQUENCE...</td>
                             </tr>
                         </tbody>
                     </table>
@@ -485,7 +475,7 @@
         <div class="border-t border-chrono-border pt-8">
             <div class="flex justify-center items-center gap-4">
                 <div class="w-2 h-2 rounded-full bg-chrono-accent animate-pulse-chrono"></div>
-                <p class="text-[8px] font-mono text-gray-700 font-bold uppercase tracking-[0.4em]">CHRONO OS · REALITY SYNCHRONIZATION ACTIVE · v1.0.0</p>
+                <p class="text-[8px] font-mono text-slate-400 font-bold uppercase tracking-[0.4em]">CHRONO OS · REALITY SYNCHRONIZATION ACTIVE · v1.0.0</p>
                 <div class="w-2 h-2 rounded-full bg-chrono-accent2 animate-pulse-chrono"></div>
             </div>
         </div>
@@ -494,17 +484,6 @@
     <script>
         // Init Lucide Icons
         lucide.createIcons();
-
-        // Theme Management
-        const themeToggle = document.getElementById('themeToggle');
-        const theme = localStorage.getItem('theme') || 'dark';
-        if (theme === 'light') document.documentElement.classList.remove('dark');
-
-        themeToggle.addEventListener('click', () => {
-            const isDark = document.documentElement.classList.toggle('dark');
-            localStorage.setItem('theme', isDark ? 'dark' : 'light');
-            updateChartTheme();
-        });
 
         // Clock Management
         let startTime = Date.now();
@@ -547,9 +526,8 @@
         let phChart, turbidityChart, tempChart;
 
         function initCharts() {
-            const isDark = document.documentElement.classList.contains('dark');
-            const gridColor = isDark ? 'rgba(0, 229, 255, 0.1)' : 'rgba(0, 0, 0, 0.05)';
-            const textColor = isDark ? '#00E5FF' : '#71717a';
+            const gridColor = 'rgba(2, 132, 199, 0.1)';
+            const textColor = '#64748B';
 
             // Common options
             const chartOptions = {
@@ -561,18 +539,18 @@
                 },
                 scales: {
                     x: {
-                        grid: { display: false, color: 'rgba(0, 229, 255, 0.1)' },
-                        ticks: { color: '#6B7280', font: { size: 10, family: 'Space Grotesk' } }
+                        grid: { display: false, color: 'rgba(2, 132, 199, 0.1)' },
+                        ticks: { color: '#64748B', font: { size: 10, family: 'Space Grotesk' } }
                     }
                 },
                 plugins: {
                     legend: { display: false },
                     tooltip: {
-                        backgroundColor: '#12121A',
-                        titleColor: '#00E5FF',
-                        bodyColor: '#fff',
+                        backgroundColor: '#FFFFFF',
+                        titleColor: '#0284C7',
+                        bodyColor: '#0F172A',
                         borderWidth: 1,
-                        borderColor: '#00E5FF',
+                        borderColor: '#0284C7',
                         padding: 12,
                         boxPadding: 6,
                         titleFont: { family: 'Space Grotesk', size: 11 },
@@ -589,8 +567,8 @@
                     datasets: [{
                         label: 'pH',
                         data: Array(20).fill(null),
-                        borderColor: '#00E5FF',
-                        backgroundColor: 'rgba(0, 229, 255, 0.1)',
+                        borderColor: '#0284C7',
+                        backgroundColor: 'rgba(2, 132, 199, 0.1)',
                         borderWidth: 2,
                         tension: 0.4,
                         fill: true,
@@ -605,7 +583,7 @@
                             min: 0,
                             max: 14,
                             grid: { color: gridColor },
-                            ticks: { color: '#6B7280', font: { size: 10, family: 'Space Grotesk' }, stepSize: 2 }
+                            ticks: { color: '#64748B', font: { size: 10, family: 'Space Grotesk' }, stepSize: 2 }
                         }
                     }
                 }
@@ -619,8 +597,8 @@
                     datasets: [{
                         label: 'Turbidity (NTU)',
                         data: Array(20).fill(null),
-                        borderColor: '#FF3B7F',
-                        backgroundColor: 'rgba(255, 59, 127, 0.1)',
+                        borderColor: '#E11D48',
+                        backgroundColor: 'rgba(225, 29, 72, 0.1)',
                         borderWidth: 2,
                         tension: 0.4,
                         fill: true,
@@ -635,7 +613,7 @@
                             min: 0,
                             suggestedMax: 3000,
                             grid: { color: gridColor },
-                            ticks: { color: '#6B7280', font: { size: 10, family: 'Space Grotesk' } }
+                            ticks: { color: '#64748B', font: { size: 10, family: 'Space Grotesk' } }
                         }
                     }
                 }
@@ -650,7 +628,7 @@
                         data: [0, 50],
                         backgroundColor: [
                             '#f97316',
-                            'rgba(0, 229, 255, 0.05)'
+                            'rgba(2, 132, 199, 0.05)'
                         ],
                         borderWidth: 0,
                         circumference: 180,
@@ -722,7 +700,7 @@
             } catch (error) {
                 console.error('Error fetching data:', error);
                 document.getElementById('syncStatus').textContent = "OFFLINE";
-                document.getElementById('syncStatus').className = "text-sm font-mono font-bold text-amber-500 uppercase tracking-wider";
+                document.getElementById('syncStatus').className = "text-sm font-mono font-bold text-orange-500 uppercase tracking-wider";
             }
         }
 
@@ -732,15 +710,13 @@
             const ctxReport = document.getElementById('reportChart').getContext('2d');
             if (reportChart) reportChart.destroy();
 
-            const isDark = document.documentElement.classList.contains('dark');
-
             reportChart = new Chart(ctxReport, {
                 type: 'bar',
                 data: {
                     labels: ['AVG PH', 'MAX NTU'],
                     datasets: [{
                         data: [avgPh, maxTurb / 10], // Scaled for visibility
-                        backgroundColor: ['#00E5FF', '#FF3B7F'],
+                        backgroundColor: ['#0284C7', '#E11D48'],
                         borderRadius: 4,
                         barThickness: 20
                     }]
@@ -752,23 +728,23 @@
                         y: {
                             beginAtZero: true,
                             max: 14,
-                            grid: { color: isDark ? 'rgba(0, 229, 255, 0.1)' : 'rgba(0,0,0,0.05)' },
+                            grid: { color: 'rgba(2, 132, 199, 0.1)' },
                             ticks: { display: false }
                         },
                         x: { 
                             grid: { display: false }, 
                             ticks: { 
                                 font: { size: 9, family: 'Space Grotesk' }, 
-                                color: '#6B7280' 
+                                color: '#64748B' 
                             } 
                         }
                     },
                     plugins: { 
                         legend: { display: false },
                         tooltip: {
-                            backgroundColor: '#12121A',
-                            titleColor: '#00E5FF',
-                            borderColor: '#00E5FF'
+                            backgroundColor: '#FFFFFF',
+                            titleColor: '#0284C7',
+                            borderColor: '#0284C7'
                         }
                     }
                 }
@@ -797,7 +773,7 @@
                     const history = result.history || [];
 
                     if (history.length === 0) {
-                        tbody.innerHTML = `<tr><td colspan="5" class="px-6 py-10 text-center text-xs font-mono text-gray-600">NO DATA AVAILABLE</td></tr>`;
+                        tbody.innerHTML = `<tr><td colspan="5" class="px-6 py-10 text-center text-xs font-mono text-slate-400">NO DATA AVAILABLE</td></tr>`;
                     } else {
                         tbody.innerHTML = history.map(row => {
                             const ts = row.timestamp || '-';
@@ -807,14 +783,14 @@
                             const temp_val = parseFloat(row.suhu).toFixed(1);
 
                             // Warna badge baterai
-                            const batColor = bat_val >= 60 ? 'text-chrono-accent' : bat_val >= 30 ? 'text-chrono-accent2' : 'text-amber-500';
+                            const batColor = bat_val >= 60 ? 'text-chrono-accent' : bat_val >= 30 ? 'text-chrono-accent2' : 'text-orange-500';
 
                             return `
                                 <tr class="hover:bg-chrono-accent/5 transition-colors duration-200">
-                                    <td class="px-6 py-4 text-xs font-mono text-gray-500">${ts}</td>
+                                    <td class="px-6 py-4 text-xs font-mono text-slate-500">${ts}</td>
                                     <td class="px-6 py-4 text-xs font-mono font-bold text-chrono-accent">${ph_val}</td>
                                     <td class="px-6 py-4 text-xs font-mono font-bold text-chrono-accent2">${ntu_val} NTU</td>
-                                    <td class="px-6 py-4 text-xs font-mono font-bold text-amber-500">${temp_val}°C</td>
+                                    <td class="px-6 py-4 text-xs font-mono font-bold text-orange-500">${temp_val}°C</td>
                                     <td class="px-6 py-4 text-xs font-mono font-bold ${batColor}">${bat_val}%</td>
                                 </tr>
                             `;
@@ -870,7 +846,7 @@
                 margin: 10,
                 filename: 'CHRONO-PHON32-Report.pdf',
                 image: { type: 'jpeg', quality: 0.98 },
-                html2canvas: { scale: 2, useCORS: true, backgroundColor: '#0A0A0F' },
+                html2canvas: { scale: 2, useCORS: true, backgroundColor: '#F8FAFC' },
                 jsPDF: { unit: 'mm', format: 'a4', orientation: 'landscape' }
             };
 
