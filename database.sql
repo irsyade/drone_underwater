@@ -9,9 +9,10 @@ CREATE DATABASE IF NOT EXISTS underwat_daffa_water;
 USE underwat_daffa_water;
 
 -- LANGKAH 2: Buat tabel log sensor
--- JIKA TABEL SUDAH ADA SEBELUMNYA (dengan kolom udara),
+-- JIKA TABEL SUDAH ADA SEBELUMNYA (dengan kolom udara),   
 -- jalankan perintah ALTER di bawah ini untuk menghapus kolom udara:
--- ALTER TABLE drone_logs DROP COLUMN udara;
+-- jalankan perintah ALTER di bawah ini untuk menambahkan kolom suhu:
+-- ALTER TABLE drone_logs ADD COLUMN suhu DECIMAL(10, 2) AFTER daya_listrik;
 
 CREATE TABLE IF NOT EXISTS drone_logs (
     id           INT AUTO_INCREMENT PRIMARY KEY,
@@ -29,3 +30,13 @@ INSERT INTO drone_logs (kualitas_air, tahan, daya_listrik) VALUES
 (7.30, 305.25,  95.00),
 (6.95, 325.75,  92.00),
 (7.10, 298.00,  89.00);
+
+-- LANGKAH 4: Tabel untuk kontrol motor (perintah dari dashboard)
+CREATE TABLE IF NOT EXISTS drone_commands (
+    id         INT PRIMARY KEY DEFAULT 1,
+    command    VARCHAR(20) DEFAULT 'STOP',
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
+
+-- Inisialisasi perintah awal
+INSERT IGNORE INTO drone_commands (id, command) VALUES (1, 'STOP');
